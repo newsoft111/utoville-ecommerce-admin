@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+{% load util_filter %}
+{% load mathfilters %}
+
+<link href="{% static 'libs/quill/dist/quill.snow.css' %}" rel="stylesheet" type="text/css" />
+
+<div class="page-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="page-title-box d-flex align-items-center justify-content-between">
+				<h4 class="mb-0">상품등록</h4>
+				<div class="ms-auto">
+					<a href="{% url 'product:list' %}" class="btn btn-primary">Back to page</a>
+				</div>
+			</div>
+
+			<p>대분류 > 중분류 > 소분류 순으로 선택하세요.</p>
+			<div class="col-md-4">
+				<div class="card text-bg-light">
+					<div class="card-header">대분류</div>
+					<div class="card-body text-start regist-body">
+						<ul>
+							<li><p class="card-text">홈케어</p></li>
+						</ul>	
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card text-bg-light">
+					<div class="card-header">중분류</div>
+					<div class="card-body text-start regist-body">
+						<ul>
+							<li><p class="card-text">청소</p></li>
+							<li><p class="card-text">소독</p></li>
+							<li><p class="card-text">수리</p></li>
+							<li><p class="card-text">이사</p></li>
+							<li><p class="card-text">가전 케어</p></li>
+							<li><p class="card-text">차 서비스</p></li>
+							<li><p class="card-text">생수 배달</p></li>
+						</ul>	
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card text-bg-light">
+					<div class="card-header">소분류</div>
+					<div class="card-body text-start regist-body">
+						<ul>
+							<li><p class="card-text">가정 청소</p></li>
+							<li><p class="card-text">입주 청소</p></li>
+						</ul>	
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<div class="card" style="padding: 20px 10px;">
+					<div class="card-header justify-content-between d-flex align-items-center">
+						<h4 class="card-title">서비스 기본정보</h4>
+					</div><!-- end card header -->
+					<div class="card-body">
+
+						<div class="mb-3">
+							<label for="example-text-input" class="form-label">서비스 명</label>
+							<input class="form-control" type="text" placeholder="서비스 명을 입력하세요." id="example-text-input">								
+						</div><!-- end row -->
+
+						<div class="mb-3">
+							<div class="row">
+								<div class="col-md-6">
+									<label class="form-label">지역</label>
+									<select class="form-select">
+										<option>Select</option>
+										<option>Large select</option>
+										<option>Small select</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label for="price-search-input" class="form-label">서비스 가격</label>
+									<input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="price" id="price-search-input">
+								</div>
+							</div>	
+						</div>
+
+						
+						<!--Listing Images-->
+						<div class="mb-4" data-dropzone-area="">
+							<label for="example-datetime-local-input" class="col-md-3 col-form-label">썸네일</label>
+							<div class="dz-preview" id="dz-preview-row" data-horizontal-scroll="">
+							</div>
+							<div class="chat-form rounded-pill" data-emoji-form="">
+								<button type="button"
+								class="btn btn-outline-secondary dz-clickable"
+								id="dz-btn">
+								<i class="bx bx-cloud-upload fs-4 me-1"></i> Upload
+							</button>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">서비스 상세정보</label>
+							<div id="snow-editor" style="height: 300px;"></div>
+						</div>
+
+						<div class="text-end">
+							<a href="#" class="btn btn-success" onClick='confirmBoard()'>등록</a>
+							<a href="{% url 'product:list' %}" class="btn btn-secondary">취소</a>
+						</div>
+
+					</div>
+
+				
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+{{categories}}
+
+<script src="{% static 'libs/dropzone/dist/min/dropzone.min.js' %}"></script>
+<script src="{% static 'libs/quill/dist/quill.min.js' %}"></script>
+<script src="{% static 'libs/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+
+<script>
+
+let e = new Dropzone("[data-dropzone-area]", {
+	url: "#",
+	clickable: "#dz-btn",
+	acceptedFiles: '.jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF',
+	thumbnailHeight: 200,
+	thumbnailWidth: 200,
+	previewsContainer: "#dz-preview-row",
+	previewTemplate: '\n<div class="listing-img-preview position-relative" style="margin: 0 20px 20px 0; display: inline-block;">\n\n\n<div class="dropzone-image-preview">\n<img src="#" class="img-fluid rounded-3 file-title" data-dz-thumbnail="" alt="" >\n    </div>\n\n    <a class="badge p-0 bg-dark text-white bg-opacity-75 rounded-circle position-absolute top-0 end-0 m-1" href="#" data-dz-remove="">\n       <i class="bx bx-x fs-5 lh-1"></i>\n    </a>\n</div>\n',
+	init: function () {
+		// 최초 dropzone 설정시 init을 통해 호출
+		let myDropzone = this; // closure 변수 (화살표 함수 쓰지않게 주의)
+
+		// 서버에 제출 submit 버튼 이벤트 등록
+		document.querySelector('#dz-btn').addEventListener('click', function () {
+
+			// 거부된 파일이 있다면
+			if (myDropzone.getRejectedFiles().length > 0) {
+				let files = myDropzone.getRejectedFiles();
+				console.log('거부된 파일이 있습니다.', files);
+				return;
+			}
+
+			myDropzone.processQueue(); // autoProcessQueue: false로 해주었기 때문에, 메소드 api로 파일을 서버로 제출
+		});
+
+		this.on('addedfile', function (file) {
+			// 중복된 파일의 제거
+			if (this.files.length) {
+				// -1 to exclude current file
+				var hasFile = false;
+				for (var i = 0; i < this.files.length - 1; i++) {
+					if (
+						this.files[i].name === file.name &&
+						this.files[i].size === file.size &&
+						this.files[i].lastModifiedDate.toString() === file.lastModifiedDate.toString()
+					) {
+						hasFile = true;
+						this.removeFile(file);
+					}
+				}
+			}
+
+
+			for(var i=0; i< this.files.length; i++){
+				var extension = this.files[i].name.split('.').pop().toLowerCase();		
+				if(extension != 'jpg' && extension != 'jpeg' && extension != 'png' && extension != 'gif'){
+					alert('이미지 파일이 아닙니다.');
+					this.removeFile(file);
+				}
+			}
+		});
+   },
+});
+// 파일이 업로드되면 실행
+
+var quill = new Quill('#snow-editor', {
+	modules: {
+		toolbar: [
+			[{ 'size': ['small', false, 'large', 'huge'] }],
+			['bold', 'italic', 'underline', 'strike'],
+			['blockquote', 'code-block'],
+			[{ 'color': [] }, { 'background': [] }],
+			[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+			['link', 'image'],
+			['clean'],
+		]
+	},
+	placeholder: '내용을 입력해주세요.',
+	theme: 'snow'
+});
+
+function confirmBoard(seq){
+	Swal.fire({
+		title: '등록하시겠습니까?',
+		text: "오기입이 없는지 다시 한번 확인해주세요.",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Yes'
+		}).then((result) => {
+		if (result.isConfirmed) {
+			location.href = "{% url 'product:list' %}"
+			Swal.fire(
+				'Success!',
+				'등록되었습니다.',
+				'success'
+			)
+		}
+	})
+}
+
+let pointForm = document.querySelector("input[name=price]");
+"propertychange change keyup paste input".split(" ").forEach(function(e){
+	pointForm.addEventListener(e, function(){
+		this.value = this.value.replace(/(^0+)/, '');
+		this.value = this.value.replace(/[^0-9]/g,'').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	});
+});
+
+</script>
+{% endblock %}
