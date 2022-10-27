@@ -20,4 +20,7 @@ def product_list(request):
 		"seo":seo,
 		'product_list': product_list
 	})
+
+def product_regist(request):
+	return render(request, 'product/product_regist.html')
 	

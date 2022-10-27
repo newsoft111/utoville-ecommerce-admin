@@ -33,7 +33,7 @@
 						<div class="row mb-3">
 							<div class="col-12 text-end">
 								<a href="#" class="btn btn-light">체크삭제</a>
-								<a href="#" class="btn btn-primary">상품등록</a>
+								<a href="{% url 'product:regist' %}" class="btn btn-primary">상품등록</a>
 							</div><!-- end col -->
 						</div><!-- end row -->
 						
@@ -47,15 +47,11 @@
 												<label class="form-check-label" for="contacusercheck1"></label>
 											</div>
 										</th>
-										<th scope="col">주문번호</th>
-										<th scope="col">상태</th>
+										<th scope="col" style="width: 100px">No.</th>
 										<th scope="col">상품명</th>
 										<th scope="col">옵션</th>
-										<th scope="col">수량</th>
-										<th scope="col">이름</th>
-										<th scope="col">연락처</th>
-										<th scope="col">남은수량</th>
-										<th scope="col">결제일</th>
+										<th scope="col">판매가</th>
+										<th scope="col">상태</th>
 									</tr><!-- end tr -->
 								</thead><!-- end thead -->
 								<tbody>
@@ -72,43 +68,25 @@
 												<input type="checkbox" class="form-check-input" id="contacusercheck1">
 												<label class="form-check-label" for="contacusercheck1"></label>
 											</div>
-										</th>
-
+										</th>				
+										<td>
+											<a href="#!" class="text-link fw-medium">123</a>
+										</td>
 										<td>
 											<a href="#!" class="text-link fw-medium">{{productList.name}}</a>
 										</td>
-
+										<td>
+											123
+										</td>
+										<td>
+											123
+										</td>
 										<td>
 											<span href="#" class="badge badge-soft-primary">취소</span>
 										</td>
 
-										<td>
-											<a href="#!" class="text-link fw-medium">123</a>
-										</td>
 
-										<td>
-											123
-										</td>
-
-										<td>
-											123
-										</td>
-
-										<td>
-											123
-										</td>
-
-										<td>
-											123
-										</td>
-
-										<td>
-											123
-										</td>
-
-										<td>
-											123
-										</td>
+				
 									</tr><!-- end tr -->
 									{% endfor %}
 								</tbody><!-- end tbody -->
