@@ -21,6 +21,6 @@ def product_list(request):
 		'product_list': product_list
 	})
 
-def product_regist(request):
-	return render(request, 'product/product_regist.html')
+def product_write(request):
+	return render(request, 'product/product_write.html')
 	
