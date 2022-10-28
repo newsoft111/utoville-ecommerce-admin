@@ -15,7 +15,7 @@ class ModelDeleteManager(models.Manager):
 
 def upload_to(instance, filename):
 	nowDate = datetime.now().strftime("%Y/%m/%d")
-	return '/'.join([instance.folder, str(instance.product.id), nowDate, filename])
+	return '/'.join([instance.folder, str(instance.user.id), nowDate, filename])
 
 
 class Product(models.Model):
@@ -35,7 +35,7 @@ class Product(models.Model):
 				CategoryThird,
 				on_delete=models.CASCADE,
 	)
-	name = models.CharField(max_length=255)
+	product_name = models.CharField(max_length=255)
 	content = models.TextField()
 	price = models.PositiveIntegerField(default=0)
 	discount = models.PositiveIntegerField(default=0)
@@ -101,12 +101,12 @@ class ProductVariantValue(models.Model):
 
 
 class ProductImage(models.Model):
-	image = models.FileField(upload_to=upload_to)
-	folder = 'ecommerce/product'
-	product = models.ForeignKey(
-			Product,
-			on_delete=models.CASCADE
+	user = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.CASCADE,
 	)
+	image = models.FileField(upload_to=upload_to)
+	folder = 'ecommerce/product/content'
 	
 	class Meta:
 		db_table = 'ecommerce_product_image'
@@ -119,7 +119,7 @@ class ProductThumbnail(models.Model):
 			on_delete=models.CASCADE
 	)
 
-	folder = 'ecommerce/product'
+	folder = 'ecommerce/product/thumbnail'
 	thumbnail = ProcessedImageField(
 				upload_to=upload_to,
 				processors=[ResizeToFill(800, 800)],

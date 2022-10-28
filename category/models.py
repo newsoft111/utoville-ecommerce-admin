@@ -7,6 +7,12 @@ class CategoryFirst(models.Model):
 	class Meta:
 		db_table = 'ecommerce_category_first'
 
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['data'] = CategoryFirst.objects.all()
+		return context
+
+
 
 
 class CategorySecond(models.Model):
