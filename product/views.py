@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import *
 from django.core.paginator import Paginator
-import json
+from django.http import JsonResponse
+import json, re
 # Create your views here.
 
 @login_required(login_url="acount:login")
@@ -21,9 +22,6 @@ def product_list(request):
 		"seo":seo,
 		'product_list': product_list
 	})
-<<<<<<< Updated upstream
-	
-=======
 
 
 @login_required(login_url="account:login")
@@ -35,40 +33,32 @@ def product_write(request):
 	if request.method == 'POST':
 		print(request.body)
 		jsonData = json.loads(request.body)
-		test = jsonData.get('qna_id')
-		campaign_type = request.POST.get("campaign_type")
-		category = request.POST.get("category")
-		thumbnail = request.FILES['campaign_img']
-		subject = request.POST.get("subject")
-		provide = request.POST.get("provide")
-		guide_line = request.POST.get("guide_line")
-		keyword = request.POST.get("keyword")
-		product_url = request.POST.get("product_url")
-		channel = ",".join(request.POST.getlist("channel[]"))
-		limit_offer = request.POST.get("limit_offer")
-		finished_at = 7
-		item = request.POST.get("item")
-		company_address = request.POST.get("company_address")
-		company_name = request.POST.get("company_name")
-		if request.user.plan_at > datetime.now():
-			reward = 0
-		else:
-			reward = re.sub(r'[^0-9]', '', request.POST.get('reward'))
-		
+		product_name = jsonData.get('subject')
+		area = jsonData.get('area')
+		price = re.sub(r'[^0-9]', '', jsonData.get('price'))
+		thumb_nail = jsonData.get('price')
+		content = jsonData.get('content')
 
-		item_price = 0
-		if item != 'default':
-			item_price = item_price+10000
-			if item == 'recommend':
-				item_price = item_price+20000
-				
-		
-		#pay_amount = (int(finished_at)-3)*2000+(int(limit_offer)*5000)+(int(reward)*int(limit_offer))+int(item_price)+100
-		pay_amount = (int(limit_offer)*5000)+(int(reward)*int(limit_offer))+int(item_price)+100
+		if subject is None:
+			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+			return JsonResponse(result)
+		if area is None:
+			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+			return JsonResponse(result)
+		if price is None:
+			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+			return JsonResponse(result)
+		if thumb_nail is None:
+			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+			return JsonResponse(result)
+		if content is None:
+			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+			return JsonResponse(result)
+
 		
 		try:
-			campaign = Campaign()
-			campaign.campaign_type = campaign_type
+			product_obj = Product()
+			product_obj.subject = campaign_type
 			campaign.category = category
 			campaign.subject = subject
 			campaign.channel = channel
@@ -167,4 +157,3 @@ def campaign_upload_image(request):
 		return JsonResponse(result)
 	else:
 		return redirect("Index")
->>>>>>> Stashed changes
