@@ -56,6 +56,7 @@
 				</div>
 			</div>
 
+<<<<<<< Updated upstream
 			<div class="col-12">
 				<div class="card" style="padding: 20px 10px;">
 					<div class="card-header justify-content-between d-flex align-items-center">
@@ -81,6 +82,48 @@
 								<div class="col-md-6">
 									<label for="price-search-input" class="form-label">서비스 가격</label>
 									<input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="price" id="price-search-input">
+=======
+				<div class="col-12">
+					<div class="card" style="padding: 20px 10px;">
+						<div class="card-header justify-content-between d-flex align-items-center">
+							<h4 class="card-title">서비스 기본정보</h4>
+						</div><!-- end card header -->
+						<div class="card-body">
+
+							<div class="mb-3">
+								<label for="example-text-input" class="form-label">서비스 명</label>
+								<input class="form-control" type="text" placeholder="서비스 명을 입력하세요." name="product_name">								
+							</div><!-- end row -->
+
+							<div class="mb-3">
+								<div class="row">
+									<div class="col-md-6">
+										<label class="form-label">지역</label>
+										<select class="form-select" name="area">
+											<option value="">Select</option>
+											<option>Large select</option>
+											<option>Small select</option>
+										</select>
+									</div>
+									<div class="col-md-6">
+										<label for="price-search-input" class="form-label">서비스 가격</label>
+										<input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="price" id="price-search-input">
+									</div>
+								</div>	
+							</div>
+
+							
+							<!--Listing Images-->
+							<div class="mb-4" data-dropzone-area="">
+								<label class="form-label">썸네일</label>
+								<div class="thumbnail-preview row" id="thumbnail-preview" >
+								</div>
+								<div class="chat-form rounded-pill" data-emoji-form="">
+									<input type="file" class="d-none" id="thumbnail-upload">
+									<label for="thumbnail-upload">
+										<span class="btn btn-primary">업로드</span>
+									</label>
+>>>>>>> Stashed changes
 								</div>
 							</div>	
 						</div>
@@ -126,6 +169,7 @@
 <script src="{% static 'libs/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
 
 <script>
+<<<<<<< Updated upstream
 
 let e = new Dropzone("[data-dropzone-area]", {
 	url: "#",
@@ -181,6 +225,82 @@ let e = new Dropzone("[data-dropzone-area]", {
    },
 });
 // 파일이 업로드되면 실행
+=======
+let is_run = false
+const dataTransfer = new DataTransfer();
+const handler = {
+	init() {
+		const fileInput = document.querySelector('#thumbnail-upload');
+		const preview = document.querySelector('.thumbnail-preview');
+		
+		fileInput.addEventListener('change', () => {
+			
+			const files = Array.from(fileInput.files);
+			files.forEach((file) => {
+				var reader = new FileReader();
+				reader.onload = function(e) {			
+					html = '<div class="position-relative col-3">';
+					html += `<button type='button' onclick='thumbnail_remove(this);' data-index='${file.lastModified}' class='btn btn-primary position-absolute top-0 end-0' id='thumbnail-remove-btn'><i class='bx bx-x fs-5 lh-1'></i></button>`;
+					html += `<img src="${e.target.result}" class="img-thumbnail">`;
+					html += '</div>'
+					preview.innerHTML +=  html;
+				}
+				reader.readAsDataURL(file);
+				dataTransfer.items.add(file);
+			});
+
+			fileInput.files = dataTransfer.files;
+			console.log(document.querySelector('#thumbnail-upload').files)
+		});
+	},
+}
+
+handler.init();
+
+
+function thumbnail_remove(e) {
+	dataTransfer.clearData();
+	const lastModified = e.dataset.index;
+	const input = document.querySelector('#thumbnail-upload');
+	const { files } = input;
+
+	
+	for (let i = 0; i < files.length; i++) {
+		const file = files[i]
+		if (lastModified != file.lastModified) {
+
+			dataTransfer.items.add(file) // here you exclude the file. thus removing it.
+		}
+	}
+	
+	input.files = dataTransfer.files // Assign the updates list
+	e.parentElement.remove();
+
+}
+
+
+
+// function remove_preview_img(e) {
+// 	const dt = new DataTransfer();
+// 	const input = document.querySelector('#thumbnail-upload');
+
+// 	for (let i = 0; i < input.files.length; i++) {
+// 		console.log(i);
+// 		const file = input.files[i];
+// 		if (e.dataset.id !== i) {
+// 			e.parentElement.remove();
+// 		} else {
+// 			dt.items.add(file);
+// 		}
+		
+// 	}
+	
+// 	input.files = dt.files; // Assign the updates list
+// }
+
+
+
+>>>>>>> Stashed changes
 
 var quill = new Quill('#snow-editor', {
 	modules: {
