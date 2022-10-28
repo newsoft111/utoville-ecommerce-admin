@@ -66,7 +66,7 @@
 
 							<div class="mb-3">
 								<label for="example-text-input" class="form-label">서비스 명</label>
-								<input class="form-control" type="text" placeholder="서비스 명을 입력하세요." name="subject">								
+								<input class="form-control" type="text" placeholder="서비스 명을 입력하세요." name="product_name">								
 							</div><!-- end row -->
 
 							<div class="mb-3">
@@ -74,7 +74,7 @@
 									<div class="col-md-6">
 										<label class="form-label">지역</label>
 										<select class="form-select" name="area">
-											<option>Select</option>
+											<option value="">Select</option>
 											<option>Large select</option>
 											<option>Small select</option>
 										</select>
@@ -127,31 +127,17 @@
 <script>
 let is_run = false
 
+
 let e = new Dropzone("[data-dropzone-area]", {
-	url: "#",
+	autoProcessQueue: false,
+	url: '#',
 	clickable: "#dz-btn",
-	acceptedFiles: '.jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF',
+	acceptedFiles: 'image/*',
 	thumbnailHeight: 200,
 	thumbnailWidth: 200,
 	previewsContainer: "#dz-preview-row",
 	previewTemplate: '\n<div class="listing-img-preview position-relative" style="margin: 0 20px 20px 0; display: inline-block;">\n\n\n<div class="dropzone-image-preview">\n<img src="#" class="img-fluid rounded-3 file-title" data-dz-thumbnail="" alt="" >\n    </div>\n\n    <a class="badge p-0 bg-dark text-white bg-opacity-75 rounded-circle position-absolute top-0 end-0 m-1" href="#" data-dz-remove="">\n       <i class="bx bx-x fs-5 lh-1"></i>\n    </a>\n</div>\n',
 	init: function () {
-		// 최초 dropzone 설정시 init을 통해 호출
-		let myDropzone = this; // closure 변수 (화살표 함수 쓰지않게 주의)
-
-		// 서버에 제출 submit 버튼 이벤트 등록
-		document.querySelector('#dz-btn').addEventListener('click', function () {
-
-			// 거부된 파일이 있다면
-			if (myDropzone.getRejectedFiles().length > 0) {
-				let files = myDropzone.getRejectedFiles();
-				console.log('거부된 파일이 있습니다.', files);
-				return;
-			}
-
-			myDropzone.processQueue(); // autoProcessQueue: false로 해주었기 때문에, 메소드 api로 파일을 서버로 제출
-		});
-
 		this.on('addedfile', function (file) {
 			// 중복된 파일의 제거
 			if (this.files.length) {
@@ -178,8 +164,9 @@ let e = new Dropzone("[data-dropzone-area]", {
 				}
 			}
 		});
-   },
+   	},
 });
+
 // 파일이 업로드되면 실행
 
 var quill = new Quill('#snow-editor', {
@@ -208,7 +195,9 @@ function upload_content_image() {
 	input.setAttribute('accept', "image/jpeg, image/png, image/gif");
     input.click();
 
-    input.onchange = function() {
+    input.onchange = upload_submit;
+	
+	async function upload_submit() {
 		if(is_run == true) {
 			openModal('알림','잠시후에 다시시도 해주세요.');
 			return false;
@@ -217,17 +206,15 @@ function upload_content_image() {
 		is_run = true;
 
 		const fd = new FormData();
-		const file = $(this)[0].files[0];
+		const file = this.files[0];
 		fd.append('image', file);
 
-		const response = fetch("{{request.path}}", {
+		const response = fetch("{% url 'product:upload_image' %}", {
 			method: "POST",
 			headers: {
 				"X-CSRFToken": getCookie("csrftoken"),
 			},
-			body: JSON.stringify(
-				Object.fromEntries(fd)
-			),
+			body: fd,
 		})
 		.then(response => response.json())
 		.then(data => {
@@ -237,7 +224,7 @@ function upload_content_image() {
 				const range = quill.getSelection();
 				quill.insertEmbed(range.index, 'image', data.result_text);
 			} else {
-				openPopup("알림", data.result_text);
+				openModal("알림", data.result_text);
 			}
 		});
     };
@@ -270,9 +257,9 @@ async function product_write_submit() {
         console.log(data);
         is_run  = false;
         if (data.result == '200') {
-            openModal("good", data.result_text, '#qnaDeleteModal', 'reload');
+            openModal("good", data.result_text, '', 'reload');
         } else {
-            openModal("good", data.result_text, '#qnaDeleteModal');
+            openModal("good", data.result_text, '');
         }
     });
 }

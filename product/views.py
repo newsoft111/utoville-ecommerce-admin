@@ -31,129 +31,92 @@ def product_write(request):
 	}
 
 	if request.method == 'POST':
-		print(request.body)
 		jsonData = json.loads(request.body)
-		product_name = jsonData.get('subject')
+		product_name = jsonData.get('product_name')
 		area = jsonData.get('area')
 		price = re.sub(r'[^0-9]', '', jsonData.get('price'))
-		thumb_nail = jsonData.get('price')
+		thumbnail = jsonData.get('thumbnail')
 		content = jsonData.get('content')
 
-		if subject is None:
+		if product_name is None or product_name == '':
 			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
 			return JsonResponse(result)
-		if area is None:
-			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+		if area is None or area == '':
+			result = {'result': '201', 'result_text': '지역을 선택해주세요.'}
 			return JsonResponse(result)
-		if price is None:
-			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+		if price is None or price == '':
+			result = {'result': '201', 'result_text': '가격을 입력해주세요.'}
 			return JsonResponse(result)
-		if thumb_nail is None:
-			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+		if thumbnail is None or thumbnail == '':
+			result = {'result': '201', 'result_text': '대표 이미지을 등록해주세요.'}
 			return JsonResponse(result)
-		if content is None:
-			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
+		if content is None or content == '':
+			result = {'result': '201', 'result_text': '내용을 입력해주세요.'}
 			return JsonResponse(result)
 
 		
 		try:
 			product_obj = Product()
-			product_obj.subject = campaign_type
-			campaign.category = category
-			campaign.subject = subject
-			campaign.channel = channel
-			campaign.thumbnail = thumbnail
-			campaign.provide = provide
-			campaign.guide_line = guide_line
-			campaign.keyword = keyword
-			if product_url is not None:
-				campaign.product_url = product_url
-			campaign.limit_offer = limit_offer
-			if company_address is not None:
-				campaign.company_address = company_address
-			if request.user.plan_type != 0 and request.user.plan_at > datetime.now():
-				campaign.is_paid = True
-				campaign.pay_amount = 0
-			else:
-				campaign.pay_amount = pay_amount
-			campaign.finished_at = datetime.now() + timedelta(days=int(finished_at))
-			campaign.reward = reward
-			campaign.user = request.user
-			campaign.merchant_uid = None
-			campaign.company_name = company_name
-		
+			product_obj.user = request.user
+			product_obj.product_name = product_name
+			product_obj.area = area
+			product_obj.price = price
+			product_obj.content = content
+			product_obj.save()
 
-			if request.user.plan_type != 0 and request.user.plan_at > datetime.now():
-				if not request.user.is_superuser:
-					if request.user.plan_type == 1:
-						campaign.is_item = True
-					elif request.user.plan_type == 2:
-						campaign.is_item = True
-						campaign.is_recommend = True
-				else:
-					campaign.is_item = True
-					campaign.is_recommend = True
-			else:
-				if item != 'default':
-					campaign.is_item = True
-					if item == 'recommend':
-						campaign.is_recommend = True
-			campaign.save()
+			result = {'result': '200', 'result_text': '등록이 완료되었습니다.'}
+			return JsonResponse(result)
 
-			campaign = Campaign.objects.get(pk=campaign.pk)
-			campaign.merchant_uid = str(datetime.now().strftime('%Y%m%d')) + str(campaign.pk) + str(random.randint(10000,99999))
-			campaign.save()
-
-			if request.user.is_superuser:
-				shipping_address = UserShippingAddress.objects.get(pk=1)
-
-				for i in range(random.randrange(50)):
-					campaign_offer = CampaignOffer()
-					campaign_offer.campaign = campaign
-					campaign_offer.user = request.user
-					campaign_offer.shipping_address = shipping_address
-					campaign_offer.appeal = 'appeal'
-					campaign_offer.sns_url = 'sns_url'
-					campaign_offer.save()
-					
-			if request.user.plan_type != 0 and request.user.plan_at > datetime.now():
-				result = '200'
-				result_text = "등록이 완료되었습니다."
-				next_url = resolve_url('UserCampaign')
-			else:
-				result = '200'
-				result_text = "등록이 완료되었습니다.<br>결제창으로 이동합니다."
-				next_url = resolve_url('CampaignPay', campaign.pk)
 		except Exception as e:
-			result = '201'
-			result_text = '알수없는 오류입니다. 다시시도 해주세요.'
-			next_url = ''
+			print(e)
+			result = {'result': '201', 'result_text': '알수없는 오류입니다. 관리자에게 문의해주세요.'}
+			return JsonResponse(result)
 
-		result = {'result': result, 'result_text': result_text, "next_url":next_url}
-		return JsonResponse(result)
 	else:
 		return render(request, 'product/product_write.html')
 
 
 @login_required(login_url="account:login")
-def campaign_upload_image(request):
-	if request.method == 'POST':
-		image = request.FILES['image']
-				
-		try:
-			campaign_image = CampaignImage()
-			campaign_image.image = image
-			campaign_image.user = request.user
-			campaign_image.save()
+def product_upload_content_image(request):
+	image = request.FILES['image']
+			
+	try:
+		product_image_obj = ProductImage()
+		product_image_obj.image = image
+		product_image_obj.user = request.user
+		product_image_obj.save()
 
-			result = '200'
-			result_text = campaign_image.image.url
-		except Exception as e:
-			print(e)
-			result = '201'
-			result_text = '알수없는 오류입니다. 다시시도 해주세요.'
+		return JsonResponse({
+			'result': '200',
+			'result_text': product_image_obj.image.url
+		})
 
-		result = {'result': result, 'result_text': result_text}
-		return JsonResponse(result)
-	else:
-		return redirect("Index")
+	except Exception as e:
+		print(e)
+		return JsonResponse({
+			'result': '201',
+			'result_text': '알수없는 오류입니다. 다시시도 해주세요.'
+		})
+
+
+@login_required(login_url="account:login")
+def product_upload_thumbnail(request):
+	thumbnail = request.FILES['thumbnail']
+
+	try:
+		product_thumbnail_obj = ProductThumbnail()
+		product_thumbnail_obj.thumbnail = thumbnail
+		product_thumbnail_obj.user = request.user
+		product_thumbnail_obj.save()
+
+		return JsonResponse({
+			'result': '200',
+			'result_text': product_image_obj.image.url
+		})
+
+	except Exception as e:
+		return JsonResponse({
+			'result': '201',
+			'result_text': '알수없는 오류입니다. 다시시도 해주세요.'
+		})
+
