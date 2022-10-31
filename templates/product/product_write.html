@@ -6,6 +6,11 @@
 {% load mathfilters %}
 
 <link href="{% static 'libs/quill/dist/quill.snow.css' %}" rel="stylesheet" type="text/css" />
+<style>
+	.category-select:focus {
+		box-shadow: inset 0 1px 1px rgba(255,255,255);
+	}
+</style>
 
 <div class="page-content">
 	<div class="container-fluid">
@@ -22,38 +27,25 @@
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">대분류</div>
-						<div class="card-body text-start regist-body">
-							<ul>
-								<li><p class="card-text">홈케어</p></li>
-							</ul>	
-						</div>
+						<select class="category-select form-select border-0" size="9">
+
+						</select>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="card text-bg-light">
-						<div class="card-header">중분류</div>
-						<div class="card-body text-start regist-body">
-							<ul>
-								<li><p class="card-text">청소</p></li>
-								<li><p class="card-text">소독</p></li>
-								<li><p class="card-text">수리</p></li>
-								<li><p class="card-text">이사</p></li>
-								<li><p class="card-text">가전 케어</p></li>
-								<li><p class="card-text">차 서비스</p></li>
-								<li><p class="card-text">생수 배달</p></li>
-							</ul>	
-						</div>
+						<div class="card-header">중분류</div>				
+						<select class="category-select form-select border-0" size="9">
+
+						</select>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">소분류</div>
-						<div class="card-body text-start regist-body">
-							<ul>
-								<li><p class="card-text">가정 청소</p></li>
-								<li><p class="card-text">입주 청소</p></li>
-							</ul>	
-						</div>
+						<select class="category-select form-select border-0" size="9">
+
+						</select>
 					</div>
 				</div>
 
@@ -86,7 +78,48 @@
 								</div>	
 							</div>
 
-							
+							<div class="mb-3">
+								
+								<label class="form-label">옵션 설정</label>
+								<div class="row border p-3">
+									<div class="col-md-2">
+										<label class="form-label col-3">옵션1</label>
+									</div>
+									<div class="col-md-10">
+										<div class="d-flex">
+											<input class="form-control" type="text" placeholder="옵션을 입력하세요.">
+											<span class="btn btn-danger text-nowrap ms-3">삭제</span>
+										</div>
+										
+										<div class="mt-2">
+											<table class="table mb-9 table-bordered text-center">
+												<thead>
+													<tr>
+														<!-- <th scope="col">순서</th> -->
+														<th scope="col">옵션 항목</th>
+														<th scope="col">옵션 가격</th>
+														<th scope="col">삭제</th>
+													</tr>
+												</thead>
+												<tbody id="option-list">
+													<tr>
+														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
+														<td><input class="form-control" type="text" placeholder="옵션 항목 입력하세요."></td>
+														<td><input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="option-price" id="option-price-input"></td>
+														<td><span class="btn btn-danger" id="remove-option-btn" onclick="removeOptionItem(this)">삭제</span></td>
+													</tr>			
+												</tbody>
+												<tfoot>
+													<tr>
+														<td colspan="3"><a href="#!" id="add-option-btn">+ 새 옵션 항목 추가하기</a></td>
+													</tr>					
+												</tfoot>
+											  </table>
+										</div>
+									</div>									
+								</div>			
+							</div>
+				
 							<!--Listing Images-->
 							<div class="mb-4" data-dropzone-area="">
 								<label class="form-label">썸네일</label>
@@ -101,7 +134,7 @@
 							</div>
 
 							<div class="mb-3">
-								<label class="form-label">서비스 상세정보</label>
+								<label class="form-label">상세정보</label>
 								<input type="hidden" name="content">
 								<div id="snow-editor" style="height: 300px;"></div>
 							</div>
@@ -175,29 +208,6 @@ function thumbnail_remove(e) {
 	e.parentElement.remove();
 
 }
-
-
-
-// function remove_preview_img(e) {
-// 	const dt = new DataTransfer();
-// 	const input = document.querySelector('#thumbnail-upload');
-
-// 	for (let i = 0; i < input.files.length; i++) {
-// 		console.log(i);
-// 		const file = input.files[i];
-// 		if (e.dataset.id !== i) {
-// 			e.parentElement.remove();
-// 		} else {
-// 			dt.items.add(file);
-// 		}
-		
-// 	}
-	
-// 	input.files = dt.files; // Assign the updates list
-// }
-
-
-
 
 var quill = new Quill('#snow-editor', {
 	modules: {
@@ -300,6 +310,34 @@ async function product_write_submit() {
 		this.value = this.value.replace(/[^0-9]/g,'').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 	});
 });
+
+"propertychange change keyup paste input".split(" ").forEach(function(e){
+	document.querySelector("input[name=option-price]").addEventListener(e, function(){
+		this.value = this.value.replace(/(^0+)/, '');
+		this.value = this.value.replace(/[^0-9]/g,'').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	});
+});
+
+
+let addoptionBtn = document.getElementById("add-option-btn");
+let removeoptionBtn = document.getElementById("remove-option-btn")
+let num = 2;
+
+addoptionBtn.addEventListener("click", function(){
+	try {
+		num = Number(document.querySelector('tbody[id=option-list]').lastElementChild.firstElementChild.innerText) + 1;
+	} catch (arr) {
+		num = 1;
+	}
+	html = `<tr><td><input class="form-control" type="text" placeholder="옵션 항목 입력하세요."></td>`;
+	html += `<td><input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="option-price" id="option-price-input"></td>`;
+	html += '<td><span class="btn btn-danger" onclick=removeOptionItem(this);>삭제</span></td></tr>'
+	document.querySelector('tbody[id=option-list]').innerHTML +=  html;
+});
+
+function removeOptionItem(e){
+	e.parentElement.parentElement.remove();
+}
 
 </script>
 {% endblock %}
