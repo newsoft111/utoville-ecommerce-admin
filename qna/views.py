@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from django.core.paginator import Paginator
 from django.db.models import Q
+from datetime import datetime
 import json
 # Create your views here.
 
@@ -60,37 +61,3 @@ def qna_detail(request, qna_id):
 			"qna_obj": qna_obj
 		})
 
-
-def qna_delete(request):
-	seo = {
-		'title': "유토빌",
-	}
-	jsonData = json.loads(request.body)
-	qna_id = jsonData.get('qna_id')
-	
-	try:
-		qna_obj = QnA.objects.get(pk=qna_id)
-	except:
-		return JsonResponse({
-			'result': '201', 
-			'result_text': '알수없는 오류입니다. 다시시도 해주세요.'
-		})
-
-	try:
-		qna_obj.is_delete = True
-		qna_obj.deleted_at = datetime.now()
-		qna_obj.save()
-
-		result = '200'
-		result_text = "거부가 완료되었습니다."
-	except Exception as e:
-		print(e)
-		result = '201'
-		result_text = '알수없는 오류입니다. 다시시도 해주세요.'
-
-	return JsonResponse({
-		'result': result, 
-		'result_text': result_text
-	})
-
-	
