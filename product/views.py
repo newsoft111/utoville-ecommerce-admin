@@ -73,7 +73,8 @@ def product_write(request):
 			return JsonResponse(result)
 
 	else:
-		return render(request, 'product/product_write.html')
+		l1_data = CategoryFirst.objects.all()
+		return render(request, 'product/product_write.html', context={"l1_data": l1_data})
 
 
 
@@ -137,3 +138,21 @@ def product_upload_thumbnail(request):
 			'result_text': '알수없는 오류입니다. 다시시도 해주세요.'
 		})
 
+
+def L2L3Category(request):
+	""" using this function we will capture the records of l2 with corresponding l3 category"""
+	if request.method == 'POST':
+		try:
+			jsonData = json.loads(request.body)
+			l1_cat_id = jsonData.get('l1_id')
+			l2_l3_cat_data = {}
+			l2_cats = CategorySecond.objects.filter(parent_id=int(l1_cat_id))
+			for l2_cat in l2_cats:
+				if l2_cat.name not in l2_l3_cat_data:
+					l2_l3_cat_data[l2_cat.name] = []
+				l3_cats = CategoryThird.objects.filter(parent_id=l2_cat.id)
+				for l3_cat in l3_cats:
+					l2_l3_cat_data[l2_cat.name].append(l3_cat.name)
+			return JsonResponse({"data": l2_l3_cat_data, 'status': "200"})
+		except Exception as ex:
+			return JsonResponse({"data": '', 'status': "400"})
