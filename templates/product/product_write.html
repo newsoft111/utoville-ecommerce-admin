@@ -27,15 +27,17 @@
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">대분류</div>
-						<select class="category-select form-select border-0" size="9">
-
+						<select class="category-select form-select border-0" size="9" id="l1_cat">
+							{% for l1_cat in l1_data %}
+							<option value="{{l1_cat.id}}" onclick="get_l2(this)"> {{l1_cat.name}} </option>
+							{% endfor %}
 						</select>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">중분류</div>				
-						<select class="category-select form-select border-0" size="9">
+						<select class="category-select form-select border-0" size="9" id="l2_cat">
 
 						</select>
 					</div>
@@ -43,7 +45,7 @@
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">소분류</div>
-						<select class="category-select form-select border-0" size="9">
+						<select class="category-select form-select border-0" size="9" id="l3_cat">
 
 						</select>
 					</div>
@@ -334,6 +336,51 @@ addoptionBtn.addEventListener("click", function(){
 	html += '<td><span class="btn btn-danger" onclick=removeOptionItem(this);>삭제</span></td></tr>'
 	document.querySelector('tbody[id=option-list]').innerHTML +=  html;
 });
+
+
+async function get_l2(elem) {
+    let l1_id= elem.value;
+    const response = await fetch("{% url 'product:l2_l3_category' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+            'l1_id': l1_id,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        final_data = data.data
+        if (data.status == '200') {
+            let cats = '';
+			for (var i=0; i<Object.keys(data.data).length; i++) {
+				cats += '<option value='+Object.keys(data.data)[i]+' onclick="get_l3(this)">'+Object.keys(data.data)[i]+'</option>';
+			}
+			document.querySelector('select[id=l2_cat]').innerHTML =  '';
+			document.querySelector('select[id=l2_cat]').innerHTML +=  cats;
+			document.querySelector('select[id=l3_cat]').innerHTML =  '';
+        } else {
+            document.querySelector('select[id=l2_cat]').innerHTML =  '';
+        }
+    });
+}
+
+function get_l3(elem){
+            let cats = '';
+            l3_cats = final_data[elem.value]
+            if (l3_cats.length){
+			for (var i = 0; i < l3_cats.length; i++) {
+				cats += '<option value='+l3_cats[i]+'>'+l3_cats[i]+'</option>';
+			}
+			document.querySelector('select[id=l3_cat]').innerHTML = '';
+			document.querySelector('select[id=l3_cat]').innerHTML +=  cats;
+			}
+			else{
+			document.querySelector('select[id=l3_cat]').innerHTML = '';
+			}
+}
+
 
 function removeOptionItem(e){
 	e.parentElement.parentElement.remove();
