@@ -33,7 +33,6 @@
 						<div class="row mb-3">
 							<div class="col-12 text-end">
 								<a href="#" class="btn btn-light">취소</a>
-								<a href="#" class="btn btn-primary">접수</a>
 							</div><!-- end col -->
 						</div><!-- end row -->
 						
@@ -59,13 +58,13 @@
 									</tr><!-- end tr -->
 								</thead><!-- end thead -->
 								<tbody>
-									{% if not order_item_list %}
+									{% if not order_item_objs %}
 									<tr>
 										<td class="border-bottom-0 text-center p-5" colspan="10">주문이 없습니다.</td>
 									</tr>
 									{% endif%}
 									
-									{% for orderItem in order_item_list %}
+									{% for order_item_obj in order_item_objs %}
 									<tr>
 										<th scope="row">
 											<div class="form-check font-size-16">
@@ -75,7 +74,7 @@
 										</th>
 
 										<td>
-											<a href="#!" class="text-link fw-medium">{{orderItem.order_uid}}</a>
+											<a href="#!" class="text-link fw-medium">{{order_item_obj.order_uid}}</a>
 										</td>
 
 										<td>
@@ -83,31 +82,31 @@
 										</td>
 
 										<td>
-											<a href="#!" class="text-link fw-medium">{{orderItem.product_name}}</a>
+											<a href="#!" class="text-link fw-medium">{{order_item_obj.product_name}}</a>
 										</td>
 
 										<td>
-											{{orderItem.variant_value}}
+											{{order_item_obj.variant_value}}
 										</td>
 
 										<td>
-											{{orderItem.ordered_quantity}}개
+											{{order_item_obj.ordered_quantity}}개
 										</td>
 
 										<td>
-											{{orderItem.order.username}}
+											{{order_item_obj.order.username}}
 										</td>
 
 										<td>
-											{{orderItem.order.username}}
+											{{order_item_obj.order.username}}
 										</td>
 
 										<td>
-											{{orderItem.ordered_quantity|sub:orderItem.shipped_quantity}}개
+											{{order_item_obj.ordered_quantity|sub:order_item_obj.shipped_quantity}}개
 										</td>
 
 										<td>
-											{{orderItem.order.paid_at}}
+											{{order_item_obj.order.paid_at}}
 										</td>
 									</tr><!-- end tr -->
 									{% endfor %}
@@ -119,9 +118,9 @@
 							<!-- end col -->
 							<div class="col-12">
 								<ul class="pagination pagination-rounded justify-content-center mb-sm-0">
-									{% if order_item_list.has_previous %}
+									{% if order_item_objs.has_previous %}
 									<li class="page-item">
-										<a href="?p={{order_item_list.previous_page_number }}" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
+										<a href="?p={{order_item_objs.previous_page_number }}" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
 									</li>
 									{% else %}
 									<li class="page-item disabled">
@@ -129,9 +128,9 @@
 									</li>
 									{% endif %}
 									
-									{% for page_number in order_item_list.paginator.page_range %}
-										{% if page_number >= order_item_list.number|add:-2 and page_number <= order_item_list.number|add:2 %}
-											{% if page_number == order_item_list.number %}
+									{% for page_number in order_item_objs.paginator.page_range %}
+										{% if page_number >= order_item_objs.number|add:-2 and page_number <= order_item_objs.number|add:2 %}
+											{% if page_number == order_item_objs.number %}
 											<li class="page-item active">
 												<span class="page-link">{{ page_number }}</span>
 											</li>
@@ -143,9 +142,9 @@
 										{% endif %}
 									{% endfor %}
 									
-									{% if order_item_list.has_next  %}
+									{% if order_item_objs.has_next  %}
 									<li class="page-item">
-										<a href="?p={{order_item_list.next_page_number }}" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
+										<a href="?p={{order_item_objs.next_page_number }}" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
 									</li>
 									{% else %}
 									<li class="page-item disabled">

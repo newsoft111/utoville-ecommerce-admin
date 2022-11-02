@@ -7,7 +7,7 @@ from django.http import JsonResponse
 import json, re
 # Create your views here.
 
-@login_required(login_url="acount:login")
+@login_required(login_url="account:login")
 def product_list(request):
 	seo = {
 		'title': "상품 리스트 - 유토빌",
@@ -75,6 +75,23 @@ def product_write(request):
 	else:
 		l1_data = CategoryFirst.objects.all()
 		return render(request, 'product/product_write.html', context={"l1_data": l1_data})
+
+
+
+def product_delete(request):
+	jsonData = json.loads(request.body)
+	product_id = jsonData.get('cart_item_id_arr')
+
+	Product.objects.filter(pk__in=product_id).update(
+		is_deleted = True, 
+		deleted_at = datetime.now()
+	)
+	
+	result = '200'
+	result_text = '삭제가 완료되었습니다.'
+
+	result = {'result': result, 'result_text': result_text}
+	return JsonResponse(result)
 
 
 @login_required(login_url="account:login")

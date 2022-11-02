@@ -1,7 +1,9 @@
 from django.db import models
-import uuid
+import calendar
+import time
 from product.models import *
 from account.models import UserShippingAddress
+
 
 # Create your models here.
 class Order(models.Model):
@@ -28,12 +30,16 @@ class OrderItem(models.Model):
 			Order,
 			on_delete=models.CASCADE
 	)
-	order_uid = models.UUIDField(default=uuid.uuid4, unique=True, db_index=True, editable=False)
+	order_uid = models.CharField(
+		max_length=255,
+		null=True
+	)
 	is_cancelled=models.BooleanField(default=False)
 	cancelled_at = models.DateTimeField(null=True)
-	is_refunded=models.BooleanField(default=False)
+	is_refunded = models.BooleanField(default=False)
 	refunded_at = models.DateTimeField(null=True)
-
+	is_delivered = models.BooleanField(default=False)
+	delivered_at = models.DateTimeField(null=True)
 	product = models.ForeignKey(
 			Product,
 			on_delete=models.CASCADE,
@@ -44,14 +50,27 @@ class OrderItem(models.Model):
 	variant_value = models.CharField(max_length=255, null=True)
 	variant_price = models.PositiveIntegerField(null=True)
 	ordered_quantity = models.PositiveIntegerField()
-	shipped_quantity = models.PositiveIntegerField()
+	shipped_quantity = models.PositiveIntegerField(default=0)
+	is_subscribe = models.BooleanField(default=False)
+	schedule_date= models.DateTimeField()
 	
 
 	class Meta:
 		db_table = 'ecommerce_order_item'
+
+	def sub_price(self):
+		if self.variant is not None:
+			return self.product_price + self.variant_price
+		else:
+			return self.product_price
 
 	def sub_total_price(self):
 		if self.variant is not None:
 			return (self.product_price + self.variant_price) * self.ordered_quantity
 		else:
 			return self.product_price * self.ordered_quantity
+
+	def save(self, *args, **kwargs):
+		super().save(*args, **kwargs)
+		order_uid = str(calendar.timegm(time.gmtime()))+str(self.pk)
+		OrderItem.objects.filter(id=self.pk).update(order_uid=order_uid)
