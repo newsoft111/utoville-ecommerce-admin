@@ -73,8 +73,21 @@ def product_write(request):
 			return JsonResponse(result)
 
 	else:
+		l1_l2_l3_cat_data = {}
 		l1_data = CategoryFirst.objects.all()
-		return render(request, 'product/product_write.html', context={"l1_data": l1_data})
+		for l1 in l1_data:
+			if l1.name not in l1_l2_l3_cat_data:
+				l1_l2_l3_cat_data[l1.name] = []
+			l2_cats = CategorySecond.objects.filter(parent_id=l1.id)
+			for l2_cat in l2_cats:
+				l2_data = {}
+				if l2_cat.name not in l2_data:
+					l2_data[l2_cat.name] = []
+				l3_cats = CategoryThird.objects.filter(parent_id=l2_cat.id)
+				for l3_cat in l3_cats:
+					l2_data[l2_cat.name].append(l3_cat.name)
+				l1_l2_l3_cat_data[l1.name].append(l2_data)
+		return render(request, 'product/product_write.html', context={"cats_data": l1_l2_l3_cat_data})
 
 
 
