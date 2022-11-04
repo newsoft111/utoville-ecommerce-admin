@@ -18,16 +18,13 @@
 			<div class="row">
 				<div class="page-title-box d-flex align-items-center justify-content-between">
 					<h4 class="mb-0">상품등록</h4>
-					<div class="ms-auto">
-						<a href="{% url 'product:list' %}" class="btn btn-primary">Back to page</a>
-					</div>
 				</div>
 
 				<p>대분류 > 중분류 > 소분류 순으로 선택하세요.</p>
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">대분류</div>
-						<select class="category-select form-select border-0" size="9" id="l1_cat">
+						<select class="category-select form-select border-0" name="category_first" size="9" id="l1_cat">
 							{% for key, value in cats_data.items %}
 							<option value="{{key}}" onclick="get_l2(this)"> {{key}} </option>
 							{% endfor %}
@@ -37,7 +34,7 @@
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">중분류</div>				
-						<select class="category-select form-select border-0" size="9" id="l2_cat">
+						<select class="category-select form-select border-0" name="category_second" size="9" id="l2_cat">
 
 						</select>
 					</div>
@@ -45,7 +42,7 @@
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">소분류</div>
-						<select class="category-select form-select border-0" size="9" id="l3_cat">
+						<select class="category-select form-select border-0" name="category_third" size="9" id="l3_cat">
 
 						</select>
 					</div>
@@ -90,7 +87,7 @@
 									<div class="col-md-10">
 										<div class="d-flex">
 											<input class="form-control" type="text" placeholder="옵션을 입력하세요.">
-											<span class="btn btn-danger text-nowrap ms-3">삭제</span>
+											<button type="button" class="btn btn-danger text-nowrap ms-3" disabled>삭제</button>
 										</div>
 										
 										<div class="mt-2">
@@ -108,7 +105,7 @@
 														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
 														<td><input class="form-control" type="text" placeholder="옵션 항목 입력하세요."></td>
 														<td><input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="option-price" id="option-price-input"></td>
-														<td><span class="btn btn-danger" id="remove-option-btn" onclick="removeOptionItem(this)">삭제</span></td>
+														<td><button type="button" class="btn btn-danger" id="remove-option-btn" disabled>삭제</button></td>
 													</tr>			
 												</tbody>
 												<tfoot>
@@ -128,7 +125,7 @@
 								<div class="thumbnail-preview row" id="thumbnail-preview" >
 								</div>
 								<div class="chat-form rounded-pill" data-emoji-form="">
-									<input type="file" class="d-none" id="thumbnail-upload">
+									<input type="file" class="d-none" name="thumbnail" id="thumbnail-upload">
 									<label for="thumbnail-upload">
 										<span class="btn btn-primary">업로드</span>
 									</label>
@@ -152,7 +149,6 @@
 		</form>
 	</div>
 </div>
-{{categories}}
 
 <script src="{% static 'libs/dropzone/dist/min/dropzone.min.js' %}"></script>
 <script src="{% static 'libs/quill/dist/quill.min.js' %}"></script>
@@ -285,14 +281,13 @@ async function product_write_submit() {
 	document.querySelector('input[name=content]').value = quill.root.innerHTML;
 	let form_data = new FormData(document.querySelector('form[name=productWriteForm]'));
 
+
     const response = await fetch("{{request.path}}", {
         method: "POST",
         headers: {
             "X-CSRFToken": getCookie("csrftoken"),
         },
-        body: JSON.stringify(
-            Object.fromEntries(form_data)
-        ),
+        body: form_data
     })
     .then(response => response.json())
     .then(data => {
@@ -337,8 +332,8 @@ addoptionBtn.addEventListener("click", function(){
 	document.querySelector('tbody[id=option-list]').innerHTML +=  html;
 });
 
-cats_data = {{cats_data|safe}}
-l1_name = ''
+cats_data = {{cats_data|safe}};
+l1_name = '';
 function get_l2(elem) {
     		l1_name= elem.value;
             let cats = '';
@@ -357,10 +352,11 @@ function get_l3(elem){
             if (l2_data.length){
 				for (var i=0; i < l2_data.length; i++) {
 					l3_cats = l2_data[i][elem.value]
+
 					if (l3_cats) {
 						for (var j=0; j < l3_cats.length; j++) {
-							cats += '<option value='+l3_cats[j]+'>'+l3_cats[j]+'</option>';
-					}
+							cats += '<option value='+l3_cats[j]['id']+'>'+l3_cats[j]['name']+'</option>';
+						}
 					}
 				}
 				document.querySelector('select[id=l3_cat]').innerHTML = '';

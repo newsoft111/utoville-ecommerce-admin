@@ -31,38 +31,67 @@ def product_write(request):
 	}
 
 	if request.method == 'POST':
-		jsonData = json.loads(request.body)
-		product_name = jsonData.get('product_name')
-		area = jsonData.get('area')
-		price = re.sub(r'[^0-9]', '', jsonData.get('price'))
-		thumbnail = jsonData.get('thumbnail')
-		content = jsonData.get('content')
+		product_name = request.POST.get('product_name')
+		area = request.POST.get('area')
+		price = re.sub(r'[^0-9]', '', request.POST.get('price'))
+		content = request.POST.get('content')
+		category_first = request.POST.get('category_first')
+		category_second = request.POST.get('category_second')
+		category_third = request.POST.get('category_third')
+
+		try:
+			thumbnails = request.FILES.getlist('thumbnail')
+		except:
+			result = {'result': '201', 'result_text': '대표 이미지을 등록해주세요.'}
+			return JsonResponse(result)
+
+		if category_first is None or category_first == '':
+			result = {'result': '201', 'result_text': '대분류를 선택해주세요.'}
+			return JsonResponse(result)
+
+		if category_second is None or category_second == '':
+			result = {'result': '201', 'result_text': '중분류를 선택해주세요.'}
+			return JsonResponse(result)
+
+		if category_third is None or category_third == '':
+			result = {'result': '201', 'result_text': '소분류를 선택해주세요.'}
+			return JsonResponse(result)
+		
+		try:
+			category_third_obj = CategoryThird.objects.get(pk=category_third)
+		except:
+			result = {'result': '201', 'result_text': '소분류를 선택해주세요.'}
+			return JsonResponse(result)
 
 		if product_name is None or product_name == '':
 			result = {'result': '201', 'result_text': '제목을 입력해주세요.'}
 			return JsonResponse(result)
+
 		if area is None or area == '':
 			result = {'result': '201', 'result_text': '지역을 선택해주세요.'}
 			return JsonResponse(result)
+
 		if price is None or price == '':
 			result = {'result': '201', 'result_text': '가격을 입력해주세요.'}
 			return JsonResponse(result)
-		if thumbnail is None or thumbnail == '':
-			result = {'result': '201', 'result_text': '대표 이미지을 등록해주세요.'}
-			return JsonResponse(result)
+
 		if content is None or content == '':
 			result = {'result': '201', 'result_text': '내용을 입력해주세요.'}
 			return JsonResponse(result)
 
-		
 		try:
 			product_obj = Product()
 			product_obj.user = request.user
+			product_obj.category_first = category_third_obj.parent.parent
+			product_obj.category_second = category_third_obj.parent
+			product_obj.category_third = category_third_obj
 			product_obj.product_name = product_name
-			product_obj.area = area
 			product_obj.price = price
 			product_obj.content = content
 			product_obj.save()
+
+			for thumbnail in thumbnails:
+				ProductThumbnail.objects.create(product=product_obj, thumbnail=thumbnail)
 
 			result = {'result': '200', 'result_text': '등록이 완료되었습니다.'}
 			return JsonResponse(result)
@@ -85,15 +114,15 @@ def product_write(request):
 					l2_data[l2_cat.name] = []
 				l3_cats = CategoryThird.objects.filter(parent_id=l2_cat.id)
 				for l3_cat in l3_cats:
-					l2_data[l2_cat.name].append(l3_cat.name)
+					l2_data[l2_cat.name].append({"name":l3_cat.name, "id":l3_cat.pk})
 				l1_l2_l3_cat_data[l1.name].append(l2_data)
 		return render(request, 'product/product_write.html', context={"cats_data": l1_l2_l3_cat_data})
 
 
 
 def product_delete(request):
-	jsonData = json.loads(request.body)
-	product_id = jsonData.get('cart_item_id_arr')
+	request.POST = json.loads(request.body)
+	product_id = request.POST.get('cart_item_id_arr')
 
 	Product.objects.filter(pk__in=product_id).update(
 		is_deleted = True, 
@@ -151,21 +180,3 @@ def product_upload_thumbnail(request):
 			'result_text': '알수없는 오류입니다. 다시시도 해주세요.'
 		})
 
-
-def L2L3Category(request):
-	""" using this function we will capture the records of l2 with corresponding l3 category"""
-	if request.method == 'POST':
-		try:
-			jsonData = json.loads(request.body)
-			l1_cat_id = jsonData.get('l1_id')
-			l2_l3_cat_data = {}
-			l2_cats = CategorySecond.objects.filter(parent_id=int(l1_cat_id))
-			for l2_cat in l2_cats:
-				if l2_cat.name not in l2_l3_cat_data:
-					l2_l3_cat_data[l2_cat.name] = []
-				l3_cats = CategoryThird.objects.filter(parent_id=l2_cat.id)
-				for l3_cat in l3_cats:
-					l2_l3_cat_data[l2_cat.name].append(l3_cat.name)
-			return JsonResponse({"data": l2_l3_cat_data, 'status': "200"})
-		except Exception as ex:
-			return JsonResponse({"data": '', 'status': "400"})
