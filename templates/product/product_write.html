@@ -138,21 +138,21 @@
 														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
 														<td>option1</td>
 														<td>option1_1(+0), option1_2(+1400), option1_2(+100)</td>
-														<td><button type="button" class="btn btn-secondary">remove added option button</button></td>
+														<td><button type="button" class="btn btn-secondary" onclick="removeAddedOptionItem(this);">remove added option button</button></td>
 													</tr>
 													
 													<tr>
 														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
 														<td>option2</td>
 														<td>option2_1(+0), option2_2(+0), option2_2(+0)</td>
-														<td><button type="button" class="btn btn-secondary">remove added option button</button></td>
+														<td><button type="button" class="btn btn-secondary" onclick="removeAddedOptionItem(this);">remove added option button</button></td>
 													</tr>
 
 													<tr>
 														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
 														<td>option3</td>
 														<td>option3_1(+0), option3_2(+10), option3_2(+0)</td>
-														<td><button type="button" class="btn btn-secondary">remove added option button</button></td>
+														<td><button type="button" class="btn btn-secondary" onclick="removeAddedOptionItem(this);">remove added option button</button></td>
 													</tr>
 												</tbody>
 											</table>
@@ -412,6 +412,10 @@ function get_l3(elem){
 
 
 function removeOptionItem(e){
+	e.parentElement.parentElement.remove();
+}
+
+function removeAddedOptionItem(e){
 	e.parentElement.parentElement.remove();
 }
 
