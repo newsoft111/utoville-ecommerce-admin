@@ -102,9 +102,6 @@ def product_write(request):
 			return JsonResponse(result)
 
 	else:
-<<<<<<< Updated upstream
-		return render(request, 'product/product_write.html')
-=======
 		l1_l2_l3_cat_data = {}
 		l1_data = CategoryFirst.objects.all()
 		for l1 in l1_data:
@@ -120,7 +117,6 @@ def product_write(request):
 					l2_data[l2_cat.name].append({"name":l3_cat.name, "id":l3_cat.pk})
 				l1_l2_l3_cat_data[l1.name].append(l2_data)
 		return render(request, 'product/product_write.html', context={"cats_data": l1_l2_l3_cat_data})
->>>>>>> Stashed changes
 
 
 
