@@ -260,8 +260,8 @@ def send_auth_mail(email):
 		return False
 
 
-def my_order(request):
-	return render(request, 'account/mypage/my_order.html')
+def account_list(request):
+	return render(request, 'account/account_list.html')
 
 def subscription(request):
 	return render(request, 'account/mypage/subscription.html')

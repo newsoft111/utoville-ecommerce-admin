@@ -7,7 +7,6 @@ from category.models import *
 from decimal import Decimal
 
 
-
 class ModelDeleteManager(models.Manager):
 	def get_queryset(self):
 		return super(ModelDeleteManager, self).get_queryset().filter(is_deleted=False)
@@ -15,7 +14,7 @@ class ModelDeleteManager(models.Manager):
 
 def upload_to(instance, filename):
 	nowDate = datetime.now().strftime("%Y/%m/%d")
-	return '/'.join([instance.folder, str(instance.user.id), nowDate, filename])
+	return '/'.join([instance.folder, nowDate, filename])
 
 
 class Product(models.Model):
@@ -78,6 +77,7 @@ class ProductVariant(models.Model):
 			Product,
 			on_delete=models.CASCADE
 	)
+	
 	variant = models.CharField(max_length=255)
 
 	class Meta:
@@ -118,7 +118,6 @@ class ProductThumbnail(models.Model):
 			Product,
 			on_delete=models.CASCADE
 	)
-
 	folder = 'ecommerce/product/thumbnail'
 	thumbnail = ProcessedImageField(
 				upload_to=upload_to,
@@ -127,6 +126,8 @@ class ProductThumbnail(models.Model):
 
 	class Meta:
 		db_table = 'ecommerce_product_thumbnail'
+
+
 
 
 class ProductReview(models.Model):
