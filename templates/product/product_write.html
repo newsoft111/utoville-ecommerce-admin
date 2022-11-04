@@ -78,45 +78,88 @@
 							</div>
 
 							<div class="mb-3">
-								
 								<label class="form-label">옵션 설정</label>
-								<div class="row border p-3">
-									<div class="col-md-2">
-										<label class="form-label col-3">옵션1</label>
-									</div>
-									<div class="col-md-10">
-										<div class="d-flex">
-											<input class="form-control" type="text" placeholder="옵션을 입력하세요.">
-											<button type="button" class="btn btn-danger text-nowrap ms-3" disabled>삭제</button>
+								<div class="border p-3">
+									<div class="row">
+										<div class="col-md-2">
+											<label class="form-label">옵션</label>
 										</div>
-										
-										<div class="mt-2">
+										<div class="col-md-10">
+											<div class="d-flex">
+												<input class="form-control" type="text" placeholder="옵션을 입력하세요.">
+												<button type="button" class="btn btn-primary text-nowrap ms-3">추가</button>
+											</div>
+											
+											<div class="mt-2">
+												<table class="table mb-9 table-bordered text-center">
+													<thead>
+														<tr>
+															<!-- <th scope="col">순서</th> -->
+															<th scope="col">옵션 항목</th>
+															<th scope="col">옵션 가격</th>
+															<th scope="col">삭제</th>
+														</tr>
+													</thead>
+													<tbody id="option-list">
+														<tr>
+															<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
+															<td><input class="form-control" type="text" placeholder="옵션 항목 입력하세요."></td>
+															<td><input class="form-control" type="text" value="0" placeholder="가격을 입력하세요." maxlength="11" name="option-price" id="option-price-input"></td>
+															<td><button type="button" class="btn btn-secondary" id="remove-option-btn" disabled>삭제</button></td>
+														</tr>			
+													</tbody>
+													<tfoot>
+														<tr>
+															<td colspan="3"><a href="#!" id="add-option-btn">+ 새 옵션 항목 추가하기</a></td>
+														</tr>					
+													</tfoot>
+												</table>
+											</div>
+										</div>									
+									</div>
+
+									<div class="row">
+										<div class="col-md-2">
+											<label class="form-label">추가된옵션</label>
+										</div>
+										<div class="col-md-10">
+									
 											<table class="table mb-9 table-bordered text-center">
 												<thead>
 													<tr>
 														<!-- <th scope="col">순서</th> -->
-														<th scope="col">옵션 항목</th>
-														<th scope="col">옵션 가격</th>
+														<th scope="col">옵션명</th>
+														<th scope="col">옵션항목</th>
 														<th scope="col">삭제</th>
 													</tr>
 												</thead>
-												<tbody id="option-list">
+												<tbody id="added-option-list">
 													<tr>
 														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
-														<td><input class="form-control" type="text" placeholder="옵션 항목 입력하세요."></td>
-														<td><input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="option-price" id="option-price-input"></td>
-														<td><button type="button" class="btn btn-danger" id="remove-option-btn" disabled>삭제</button></td>
-													</tr>			
-												</tbody>
-												<tfoot>
+														<td>option1</td>
+														<td>option1_1(+0), option1_2(+1400), option1_2(+100)</td>
+														<td><button type="button" class="btn btn-secondary">remove added option button</button></td>
+													</tr>
+													
 													<tr>
-														<td colspan="3"><a href="#!" id="add-option-btn">+ 새 옵션 항목 추가하기</a></td>
-													</tr>					
-												</tfoot>
-											  </table>
+														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
+														<td>option2</td>
+														<td>option2_1(+0), option2_2(+0), option2_2(+0)</td>
+														<td><button type="button" class="btn btn-secondary">remove added option button</button></td>
+													</tr>
+
+													<tr>
+														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
+														<td>option3</td>
+														<td>option3_1(+0), option3_2(+10), option3_2(+0)</td>
+														<td><button type="button" class="btn btn-secondary">remove added option button</button></td>
+													</tr>
+												</tbody>
+											</table>
 										</div>
-									</div>									
-								</div>			
+									</div>
+
+								</div>
 							</div>
 				
 							<!--Listing Images-->
@@ -327,8 +370,8 @@ addoptionBtn.addEventListener("click", function(){
 		num = 1;
 	}
 	html = `<tr><td><input class="form-control" type="text" placeholder="옵션 항목 입력하세요."></td>`;
-	html += `<td><input class="form-control" type="text" placeholder="가격을 입력하세요." maxlength="11" name="option-price" id="option-price-input"></td>`;
-	html += '<td><span class="btn btn-danger" onclick=removeOptionItem(this);>삭제</span></td></tr>'
+	html += `<td><input class="form-control" type="text" placeholder="가격을 입력하세요." value="0" maxlength="11" name="option-price" id="option-price-input"></td>`;
+	html += '<td><button type="button" class="btn btn-secondary" onclick=removeOptionItem(this);>삭제</button></td></tr>'
 	document.querySelector('tbody[id=option-list]').innerHTML +=  html;
 });
 
