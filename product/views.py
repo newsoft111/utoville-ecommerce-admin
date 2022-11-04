@@ -157,26 +157,3 @@ def product_upload_content_image(request):
 			'result': '201',
 			'result_text': '알수없는 오류입니다. 다시시도 해주세요.'
 		})
-
-
-@login_required(login_url="account:login")
-def product_upload_thumbnail(request):
-	thumbnail = request.FILES['thumbnail']
-
-	try:
-		product_thumbnail_obj = ProductThumbnail()
-		product_thumbnail_obj.thumbnail = thumbnail
-		product_thumbnail_obj.user = request.user
-		product_thumbnail_obj.save()
-
-		return JsonResponse({
-			'result': '200',
-			'result_text': product_image_obj.image.url
-		})
-
-	except Exception as e:
-		return JsonResponse({
-			'result': '201',
-			'result_text': '알수없는 오류입니다. 다시시도 해주세요.'
-		})
-
