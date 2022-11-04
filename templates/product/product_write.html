@@ -6,6 +6,11 @@
 {% load mathfilters %}
 
 <link href="{% static 'libs/quill/dist/quill.snow.css' %}" rel="stylesheet" type="text/css" />
+<style>
+	.category-select:focus {
+		box-shadow: inset 0 1px 1px rgba(255,255,255);
+	}
+</style>
 
 <div class="page-content">
 	<div class="container-fluid">
@@ -19,59 +24,27 @@
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">대분류</div>
-<<<<<<< Updated upstream
-						<div class="card-body text-start regist-body">
-							<ul>
-								<li><p class="card-text">홈케어</p></li>
-							</ul>	
-						</div>
-=======
 						<select class="category-select form-select border-0" name="category_first" size="9" id="l1_cat">
 							{% for key, value in cats_data.items %}
 							<option value="{{key}}" onclick="get_l2(this)"> {{key}} </option>
 							{% endfor %}
 						</select>
->>>>>>> Stashed changes
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="card text-bg-light">
-<<<<<<< Updated upstream
-						<div class="card-header">중분류</div>
-						<div class="card-body text-start regist-body">
-							<ul>
-								<li><p class="card-text">청소</p></li>
-								<li><p class="card-text">소독</p></li>
-								<li><p class="card-text">수리</p></li>
-								<li><p class="card-text">이사</p></li>
-								<li><p class="card-text">가전 케어</p></li>
-								<li><p class="card-text">차 서비스</p></li>
-								<li><p class="card-text">생수 배달</p></li>
-							</ul>	
-						</div>
-=======
 						<div class="card-header">중분류</div>				
 						<select class="category-select form-select border-0" name="category_second" size="9" id="l2_cat">
 
 						</select>
->>>>>>> Stashed changes
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="card text-bg-light">
 						<div class="card-header">소분류</div>
-<<<<<<< Updated upstream
-						<div class="card-body text-start regist-body">
-							<ul>
-								<li><p class="card-text">가정 청소</p></li>
-								<li><p class="card-text">입주 청소</p></li>
-							</ul>	
-						</div>
-=======
 						<select class="category-select form-select border-0" name="category_third" size="9" id="l3_cat">
 
 						</select>
->>>>>>> Stashed changes
 					</div>
 				</div>
 
@@ -104,9 +77,6 @@
 								</div>	
 							</div>
 
-<<<<<<< Updated upstream
-							
-=======
 							<div class="mb-3">
 								
 								<label class="form-label">옵션 설정</label>
@@ -149,30 +119,21 @@
 								</div>			
 							</div>
 				
->>>>>>> Stashed changes
 							<!--Listing Images-->
 							<div class="mb-4" data-dropzone-area="">
-								<label for="example-datetime-local-input" class="col-md-3 col-form-label">썸네일</label>
-								<div class="dz-preview" id="dz-preview-row" data-horizontal-scroll="">
+								<label class="form-label">썸네일</label>
+								<div class="thumbnail-preview row" id="thumbnail-preview" >
 								</div>
 								<div class="chat-form rounded-pill" data-emoji-form="">
-<<<<<<< Updated upstream
-									<button type="button"
-									class="btn btn-outline-secondary dz-clickable"
-									id="dz-btn">
-									<i class="bx bx-cloud-upload fs-4 me-1"></i> Upload
-								</button>
-=======
 									<input type="file" class="d-none" name="thumbnail" id="thumbnail-upload">
 									<label for="thumbnail-upload">
 										<span class="btn btn-primary">업로드</span>
 									</label>
->>>>>>> Stashed changes
 								</div>
 							</div>
 
 							<div class="mb-3">
-								<label class="form-label">서비스 상세정보</label>
+								<label class="form-label">상세정보</label>
 								<input type="hidden" name="content">
 								<div id="snow-editor" style="height: 300px;"></div>
 							</div>
@@ -195,48 +156,56 @@
 
 <script>
 let is_run = false
-
-
-let e = new Dropzone("[data-dropzone-area]", {
-	autoProcessQueue: false,
-	url: '#',
-	clickable: "#dz-btn",
-	acceptedFiles: 'image/*',
-	thumbnailHeight: 200,
-	thumbnailWidth: 200,
-	previewsContainer: "#dz-preview-row",
-	previewTemplate: '\n<div class="listing-img-preview position-relative" style="margin: 0 20px 20px 0; display: inline-block;">\n\n\n<div class="dropzone-image-preview">\n<img src="#" class="img-fluid rounded-3 file-title" data-dz-thumbnail="" alt="" >\n    </div>\n\n    <a class="badge p-0 bg-dark text-white bg-opacity-75 rounded-circle position-absolute top-0 end-0 m-1" href="#" data-dz-remove="">\n       <i class="bx bx-x fs-5 lh-1"></i>\n    </a>\n</div>\n',
-	init: function () {
-		this.on('addedfile', function (file) {
-			// 중복된 파일의 제거
-			if (this.files.length) {
-				// -1 to exclude current file
-				var hasFile = false;
-				for (var i = 0; i < this.files.length - 1; i++) {
-					if (
-						this.files[i].name === file.name &&
-						this.files[i].size === file.size &&
-						this.files[i].lastModifiedDate.toString() === file.lastModifiedDate.toString()
-					) {
-						hasFile = true;
-						this.removeFile(file);
-					}
+const dataTransfer = new DataTransfer();
+const handler = {
+	init() {
+		const fileInput = document.querySelector('#thumbnail-upload');
+		const preview = document.querySelector('.thumbnail-preview');
+		
+		fileInput.addEventListener('change', () => {
+			
+			const files = Array.from(fileInput.files);
+			files.forEach((file) => {
+				var reader = new FileReader();
+				reader.onload = function(e) {			
+					html = '<div class="position-relative col-3">';
+					html += `<button type='button' onclick='thumbnail_remove(this);' data-index='${file.lastModified}' class='btn btn-primary position-absolute top-0 end-0' id='thumbnail-remove-btn'><i class='bx bx-x fs-5 lh-1'></i></button>`;
+					html += `<img src="${e.target.result}" class="img-thumbnail">`;
+					html += '</div>'
+					preview.innerHTML +=  html;
 				}
-			}
+				reader.readAsDataURL(file);
+				dataTransfer.items.add(file);
+			});
 
-
-			for(var i=0; i< this.files.length; i++){
-				var extension = this.files[i].name.split('.').pop().toLowerCase();		
-				if(extension != 'jpg' && extension != 'jpeg' && extension != 'png' && extension != 'gif'){
-					alert('이미지 파일이 아닙니다.');
-					this.removeFile(file);
-				}
-			}
+			fileInput.files = dataTransfer.files;
+			console.log(document.querySelector('#thumbnail-upload').files)
 		});
-   	},
-});
+	},
+}
 
-// 파일이 업로드되면 실행
+handler.init();
+
+
+function thumbnail_remove(e) {
+	dataTransfer.clearData();
+	const lastModified = e.dataset.index;
+	const input = document.querySelector('#thumbnail-upload');
+	const { files } = input;
+
+	
+	for (let i = 0; i < files.length; i++) {
+		const file = files[i]
+		if (lastModified != file.lastModified) {
+
+			dataTransfer.items.add(file) // here you exclude the file. thus removing it.
+		}
+	}
+	
+	input.files = dataTransfer.files // Assign the updates list
+	e.parentElement.remove();
+
+}
 
 var quill = new Quill('#snow-editor', {
 	modules: {
@@ -339,8 +308,6 @@ async function product_write_submit() {
 	});
 });
 
-<<<<<<< Updated upstream
-=======
 "propertychange change keyup paste input".split(" ").forEach(function(e){
 	document.querySelector("input[name=option-price]").addEventListener(e, function(){
 		this.value = this.value.replace(/(^0+)/, '');
@@ -405,6 +372,5 @@ function removeOptionItem(e){
 	e.parentElement.parentElement.remove();
 }
 
->>>>>>> Stashed changes
 </script>
 {% endblock %}
