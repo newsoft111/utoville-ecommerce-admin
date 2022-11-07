@@ -12,6 +12,8 @@ from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 from django.conf import settings
 from util.views import EmailSender
+from .models import *
+from django.core.paginator import Paginator
 User = get_user_model()
 
 def user_login(request):
@@ -266,7 +268,6 @@ def account_list(request):
 		'title': "회원 리스트 - 유토빌",
 	}
 	account_objs =  User.objects.all().order_by( "-id")
-
 	page        = int(request.GET.get('p', 1))
 	pagenator   = Paginator(account_objs, 12)
 	account_objs = pagenator.get_page(page)
