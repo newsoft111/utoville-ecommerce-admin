@@ -14,30 +14,30 @@
 						<h4 class="card-title">회원 관리</h4>
 						<div class="text-end">
 							<span class="remove-btn btn btn-light" onclick="remove_checked_item();">체크삭제</span>
-							<span class="btn btn-primary">회원 등록</span>
 						</div>
 					</div>
 					<div class="card-body">
 						<form>
 							<div class="d-sm-inline-flex mb-3">
-								<select class="px-nice-select" name="category">
+								<select class="px-nice-select me-1" name="category">
 									<option value="" data-display="카테고리">카테고리</option>
-									
-									<option value="0">코스메틱</option>
-									
-									<option value="1">미용</option>
-													
+									<option value="0">이름</option>
+									<option value="1">아이디</option>
 								</select>
 								<input type="text" name="keyword" class="form-control" placeholder="캠페인 검색">
 								<button type="submit" style="width:100px;" class="btn btn-primary mx-1">검색</button>
 							</div>
 						</form>
 						<div class="table-responsive">
-							<table class="table mb-0 text-center">
+							<table class="table mb-0 text-center table-check">
 								<thead class="table-light">
 									<tr>
-										<th><input type="checkbox"></th>
-										<th>#</th>
+										<th scope="col" style="width: 50px;">
+											<div class="form-check font-size-16">
+												<input type="checkbox" class="form-check-input" id="checkAll">
+											</div>
+										</th>
+										<th>No.</th>
 										<th>회원 유형</th>
 										<th>이름</th>
 										<th>아이디</th>
@@ -49,19 +49,26 @@
 								</thead>
 								<tbody>
 									<tr>
-										<th><input type="checkbox"></th>
-										<th scope="row">1</th>
-										<td>회원</td>
-										<td>Otto</td>
-										<td>ididid</td>
-										<td>00-0000-0000</td>
-										<td>3000</td>
-										<td>22-11-04</td>
+										{% for account_obj in account_objs %}
+										<th scope="row">
+											<div class="form-check font-size-16">
+												<input type="checkbox" class="form-check-input list-check" id="contacusercheck">
+												<label class="form-check-label" for="contacusercheck"></label>
+											</div>
+										</th>
+										<th scope="row">{{forloop.counter}}</th>
+										<td>{{account_obj.get_member_type}}</td>
+										<td>{{account_obj.mb_name}}</td>
+										<td>{{account_obj.username}}</td>
+										<td>{{account_obj.mb_phone}}</td>
+										<td>{{account_obj.point}}</td>
+										<td>{{account_obj.mb_regdate|date:'Y-m-d H:i:s'}}</td>
 										<td>
 											<span class="btn btn-light">수정</span>
 											<span class="btn btn-secondary">삭제</span>
 										</td>
 									</tr>
+									{% endfor %}
 								</tbody>
 							</table>
 						</div>

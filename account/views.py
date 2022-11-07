@@ -8,6 +8,7 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.hashers import check_password
+from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 from django.conf import settings
 from util.views import EmailSender
@@ -261,7 +262,19 @@ def send_auth_mail(email):
 
 
 def account_list(request):
-	return render(request, 'account/account_list.html')
+	seo = {
+		'title': "회원 리스트 - 유토빌",
+	}
+	account_objs =  User.objects.all().order_by( "-id")
+
+	page        = int(request.GET.get('p', 1))
+	pagenator   = Paginator(account_objs, 12)
+	account_objs = pagenator.get_page(page)
+
+	return render(request, 'account/account_list.html', {
+		"seo":seo,
+		'account_objs': account_objs
+	})
 
 def subscription(request):
 	return render(request, 'account/mypage/subscription.html')
