@@ -42,6 +42,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 	class Meta:
 		db_table = 'member_tb'
 
+	def get_member_type(self):
+		mb_type = self.mb_type
+		dict = {
+			"R": "일반회원",
+			"S": "경비회원",
+			"M": "관리소",
+			"G": "게스트"
+		}
+		if mb_type == "R":
+			return dict[mb_type]
+
 
 class UserShippingAddress(models.Model):
 	user = models.ForeignKey(
