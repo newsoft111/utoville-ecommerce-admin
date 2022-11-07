@@ -132,7 +132,5 @@
             t.addEventListener("change", function(t) {
                 t && t.target && t.target.value && ("ltr" == t.target.value ? (document.getElementsByTagName("html")[0].removeAttribute("dir"), document.getElementById("bootstrap-style").setAttribute("href", "/static/css/bootstrap.min.css"), document.getElementById("app-style").setAttribute("href", "/static/css/app.min.css"), sessionStorage.setItem("is_visited", "layout-direction-ltr")) : (document.getElementById("bootstrap-style").setAttribute("href", "/static/css/bootstrap-rtl.min.css"), document.getElementById("app-style").setAttribute("href", "/static/css/app-rtl.min.css"), document.getElementsByTagName("html")[0].setAttribute("dir", "rtl"), sessionStorage.setItem("is_visited", "layout-direction-rtl")))
             })
-        })), i(), (t = document.getElementById("checkAll")) && (t.onclick = function() {
-            for (var t = document.querySelectorAll('.table-check input[type="checkbox"]'), e = 0; e < t.length; e++) t[e].checked = this.checked
-        })
+        })), i()
 }();
