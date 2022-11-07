@@ -130,12 +130,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'Asia/Seoul'
-
-USE_I18N = True
-
+LANGUAGE_CODE = 'ko-KR'
+TIME_ZONE = 'Asia/Seoul' # default UTC, Asia/Seoul은 +9 hours
 USE_TZ = True
 
 
