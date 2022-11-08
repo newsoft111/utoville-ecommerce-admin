@@ -91,3 +91,8 @@ function serialize (rawData) {
 	
 	return rtnData;
 }
+
+
+(checkAll = document.getElementById("checkAll")) && (checkAll.onclick = function() {
+	for (var checkBox = document.querySelectorAll('.table-check input[type="checkbox"]'), e = 0; e < checkBox.length; e++) checkBox[e].checked = this.checked
+})
