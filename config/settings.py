@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 	'category',
 	'product',
 	'profit',
+	'charge',
 ]
 
 AUTH_USER_MODEL = 'account.User'
