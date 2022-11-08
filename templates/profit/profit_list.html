@@ -5,6 +5,27 @@
 {% load util_filter %}
 {% load mathfilters %}
 
+<style>
+.pay-done {
+    border-top: 13px solid #51d28c;
+    border-left: 1px solid #51D28C;
+    border-right: 1px solid #51d28c;
+    border-bottom: 1px solid #51d28c;
+}
+.pay-waiting {
+    border-top: 13px solid #ef6866;
+    border-left: 1px solid #ef6866;
+    border-right: 1px solid #ef6866;
+    border-bottom: 1px solid #ef6866;
+}
+.pay-refund {
+    border-top: 13px solid #ffc13f;
+    border-left: 1px solid #ffc13f;
+    border-right: 1px solid #ffc13f;
+    border-bottom: 1px solid #ffc13f;
+}
+</style>
+
 <!-- Begin page -->
 <div class="page-content">
 	<div class="container-fluid">
@@ -14,6 +35,92 @@
 					<div class="card-header justify-content-between d-flex align-items-center">
 						<h4 class="card-title">정산 관리</h4>
 					</div>	
+					<div class="card-body">
+						<div class="d-flex justify-content-center align-items-center">
+							<div class="btn-group">
+								<button type="button" class="btn btn-outline-primary">오늘</button>
+								<button type="button" class="btn btn-outline-primary">1주일</button>
+								<button type="button" class="btn btn-outline-primary">1개월</button>
+								<button type="button" class="btn btn-outline-primary">3개월</button>
+								<button type="button" class="btn btn-outline-primary">6개월</button>
+							</div>
+							<div class="d-flex align-items-center ms-5">
+								<input class="form-control form-radius" name="start_date" type="date" id="start-date-input">
+																			&nbsp;&nbsp;~&nbsp;&nbsp;
+								<input class="form-control form-radius" name="end_date" type="date" id="end-date-input">
+							</div>
+						</div>
+					</div>
+					<div class="row" style="padding: 16px 20px;">
+						<div class="col-lg-4">
+							<div class="card pay-done">
+								<div class="card-body text-center">
+									<h5 class="card-title mb-2">결제완료 건수</h5>
+									<p class="card-text" style="color: rgb(101, 202, 113); "><b style="font-size: 3.8rem;">1,992</b>건</p>
+								</div>
+							</div>
+						</div><!-- end col -->
+						<div class="col-lg-4">
+							<div class="card pay-waiting">
+								<div class="card-body text-center">
+									<h5 class="card-title text-center mb-2">입금대기중 건수</h5>
+									<p class="card-text" style="color: rgb(239, 102, 102);"><b style="font-size: 3.8rem;">900</b>건</p>
+								</div>
+							</div>
+						</div><!-- end col -->
+						<div class="col-lg-4">			
+							<div class="card pay-refund">
+								<div class="card-body text-center">
+									<h5 class="card-title text-center mb-2 mb-1">결제환불 건수</h5>
+									<p class="card-text" style="color: rgb(255, 193, 63);"><b style="font-size: 3.8rem;">24</b>건</p>
+								</div>
+							</div>
+						</div><!-- end col -->
+					</div><!-- end row -->
+
+					<div class="table-responsive">
+						<table class="table mb-0">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Table heading</th>
+									<th>Table heading</th>
+									<th>Table heading</th>
+									<th>Table heading</th>
+									<th>Table heading</th>
+									<th>Table heading</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">1</th>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+								</tr>
+								<tr>
+									<th scope="row">2</th>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+								</tr>
+								<tr>
+									<th scope="row">3</th>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+									<td>Table cell</td>
+								</tr>
+							</tbody><!-- end tbody --> 
+						</table><!-- end table --> 
 				</div>
 			</div>
 		</div>
@@ -21,7 +128,21 @@
 </div>
 
 <script>
-let is_run = false;
+document.getElementById("start-date-input").value = new Date().toISOString().slice(0,10);
+document.getElementById("end-date-input").value = new Date().toISOString().slice(0,10);
 
+const category_by = document.querySelector('select[name=category_by]');
+
+category_by.addEventListener('change', (event) => {
+	var link = `{{request.path}}?category=${event.target.value}`;
+	location.href=link;
+});
+
+const status_by = document.querySelector('select[name=status_by]');
+
+status_by.addEventListener('change', (event) => {
+	var link = `{{request.path}}?status=${event.target.value}`;
+	location.href=link;
+});
 </script>
 {% endblock %}
