@@ -121,8 +121,8 @@ def product_write(request):
 
 
 def product_delete(request):
-	request.POST = json.loads(request.body)
-	product_id = request.POST.get('cart_item_id_arr')
+	jsonData = json.loads(request.body)
+	product_id = jsonData.get('cart_item_id_arr')
 
 	Product.objects.filter(pk__in=product_id).update(
 		is_deleted = True, 
