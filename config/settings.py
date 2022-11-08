@@ -48,11 +48,8 @@ INSTALLED_APPS = [
 	'qna',
 	'category',
 	'product',
-<<<<<<< Updated upstream
-=======
 	'profit',
 	'charge',
->>>>>>> Stashed changes
 ]
 
 AUTH_USER_MODEL = 'account.User'
