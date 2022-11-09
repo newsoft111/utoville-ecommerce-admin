@@ -14,5 +14,7 @@ def revenue_list(request):
 			end_date = request.GET.get("end_date")
 		
 
-	RevenueAdmin.objects.filter(date__range = [start_date, end_date])
-	return render(request, 'revenue/revenue_list.html')
+	revenue_admin_objs = RevenueAdmin.objects.filter(date__range = [start_date, end_date])
+	return render(request, 'revenue/revenue_list.html', {
+		"revenue_admin_objs": revenue_admin_objs
+	})

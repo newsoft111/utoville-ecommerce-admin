@@ -76,27 +76,21 @@
 							<table class="table mb-0 text-center">
 								<thead>
 									<tr>
-										<th>Num.</th>
-										<th>업체명</th>
-										<th>정산일자</th>
-										<th>결제수단</th>
-										<th>정산금액</th>
+										<th>날짜</th>
 										<th>결제금액</th>
-										<th>취소/환불금액</th>
-										<th>결제성공 금액</th>
+										<th>환불금액</th>
+										<th>주문수</th>
 									</tr>
 								</thead>
 								<tbody>
+									{% for revenue_admin_obj in revenue_admin_objs %}
 									<tr>
-										<th></th>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>	
+										<th>{{revenue_admin_obj.date|date:"Y-m-d"}}</th>
+										<td>{{revenue_admin_obj.payment_amount}}</td>
+										<td>{{revenue_admin_obj.refunt_amount}}</td>
+										<td>{{revenue_admin_obj.order_count}}</td>
+									</tr>
+									{% endfor %}
 								</tbody>
 							</table><!-- end table --> 
 						</div>	
