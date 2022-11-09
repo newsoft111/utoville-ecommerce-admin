@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import date
 from django.conf import settings
-# Create your models here.
+
 class RevenueAdmin(models.Model):
 	date = models.DateField()
 	payment_amount = models.PositiveIntegerField(default=0)
