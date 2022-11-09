@@ -86,8 +86,8 @@
 										</div>
 										<div class="col-md-10">
 											<div class="d-flex">
-												<input class="form-control" type="text" placeholder="옵션을 입력하세요.">
-												<button type="button" class="btn btn-primary text-nowrap ms-3">추가</button>
+												<input class="form-control" type="text" placeholder="옵션을 입력하세요." id="option_name" name="option_name">
+												<button type="button" class="btn btn-primary text-nowrap ms-3" onclick="add_options(this)">추가</button>
 											</div>
 											
 											<div class="mt-2">
@@ -134,26 +134,6 @@
 													</tr>
 												</thead>
 												<tbody id="added-option-list">
-													<tr>
-														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
-														<td>option1</td>
-														<td>option1_1(+0), option1_2(+1400), option1_2(+100)</td>
-														<td><button type="button" class="btn btn-secondary" onclick="removeAddedOptionItem(this);">remove added option button</button></td>
-													</tr>
-													
-													<tr>
-														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
-														<td>option2</td>
-														<td>option2_1(+0), option2_2(+0), option2_2(+0)</td>
-														<td><button type="button" class="btn btn-secondary" onclick="removeAddedOptionItem(this);">remove added option button</button></td>
-													</tr>
-
-													<tr>
-														<!-- <th scope="row" id="option-list-num"><span id=""></span>1</th> -->
-														<td>option3</td>
-														<td>option3_1(+0), option3_2(+10), option3_2(+0)</td>
-														<td><button type="button" class="btn btn-secondary" onclick="removeAddedOptionItem(this);">remove added option button</button></td>
-													</tr>
 												</tbody>
 											</table>
 										</div>
@@ -198,6 +178,7 @@
 <script src="{% static 'libs/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
 
 <script>
+let options_data = []
 let is_run = false
 const dataTransfer = new DataTransfer();
 const handler = {
@@ -320,11 +301,9 @@ async function product_write_submit() {
 	}
 
     is_run = true;
-
 	document.querySelector('input[name=content]').value = quill.root.innerHTML;
 	let form_data = new FormData(document.querySelector('form[name=productWriteForm]'));
-
-
+	form_data.append('options_data', JSON.stringify(options_data))
     const response = await fetch("{{request.path}}", {
         method: "POST",
         headers: {
@@ -417,6 +396,48 @@ function removeOptionItem(e){
 
 function removeAddedOptionItem(e){
 	e.parentElement.parentElement.remove();
+}
+
+function add_options(elem){
+let addoptionname = document.getElementById("option_name").value;
+        if (!addoptionname) {
+            openModal("Required!!", "Please add option", '',);
+				}
+		else
+			{
+				html = `<tr> <td id="options_name" name="options_name" > ${addoptionname} </td>`;
+				let elem = document.getElementById('option-list').querySelectorAll('input');
+				let names = [];
+				let dict = {};
+				let dict1 = {};
+				for (var i = 0; i < elem.length-1; i++) {
+						if(i == elem.length-2){
+							names += elem[i].value +'(+' + elem[i+1].value + ') ';
+							if (!dict.hasOwnProperty(addoptionname)) {
+								dict1[elem[i].value] = elem[i+1].value
+								dict[addoptionname] = dict1;
+							}
+							else {
+								dict1[elem[i].value] = elem[i+1].value
+							}
+						}
+						else {
+								names += elem[i].value +'(+' + elem[i+1].value + '), ';
+								if (!dict.hasOwnProperty(addoptionname)) {
+									dict[addoptionname] = dict1;
+									dict1[elem[i].value] = elem[i+1].value
+								}
+								else {
+									dict1[elem[i].value] = elem[i+1].value
+								}
+								i = i+1;
+						}
+					}
+				options_data.push(dict);
+				html +=	`<td id="options_price" name="options_price" >${names}</td>`;
+				html +=  `<td><button type="button" class="btn btn-secondary" onclick="removeAddedOptionItem(this);" >remove added option button</button></td></tr>`;
+				document.querySelector('tbody[id=added-option-list]').innerHTML +=  html;
+        }
 }
 
 </script>
