@@ -69,3 +69,14 @@ class UserShippingAddress(models.Model):
 
 	class Meta:
 		db_table = 'member_shipping_address_tb'
+
+
+class UserSeller(models.Model):
+	user = models.ForeignKey(
+				User,
+				on_delete=models.CASCADE
+	)
+	balance = models.PositiveIntegerField(default=0)
+
+	class Meta:
+		db_table = 'member_seller_tb'
