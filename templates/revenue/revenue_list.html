@@ -34,37 +34,28 @@
 							</div>
 						</div>
 						<div class="row justify-content-center">
-							<div class="col-lg-6">
+							<div class="col-md-4">
 								<div class="card sales-all">
 									<div class="card-body text-center">
 										<h5 class="card-title fw-bold mb-2">총 매출</h5>
-										<p class="card-text" style="color: rgb(239, 102, 102);"><b class="fs-1">₱239,000</b></p>
+										<p class="card-text" style="color: rgb(239, 102, 102);"><b class="fs-1">₱{{total_payment|intcomma}}</b></p>
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-6">			
-								<div class="card pay-calculate">
-									<div class="card-body text-center">
-										<h5 class="card-title fw-bold mb-2">정산 예정 금액</h5>
-										<p class="card-text" style="color: rgb(13, 110, 253);"><b class="fs-1">₱199,200</b></p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row justify-content-center">
-							<div class="col-lg-6">
+
+							<div class="col-md-4">
 								<div class="card pay-done">
 									<div class="card-body text-center">
 										<h5 class="card-title fw-bold mb-2">결제성공 금액</h5>
-										<p class="card-text" style="color: rgb(101, 202, 113); "><b class="fs-1">₱200,000</b></p>
+										<p class="card-text" style="color: rgb(101, 202, 113); "><b class="fs-1">₱{{payment_amount|intcomma}}</b></p>
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-6">			
+							<div class="col-md-4">			
 								<div class="card pay-refund">
 									<div class="card-body text-center">
 										<h5 class="card-title fw-bold mb-2">환불 금액</h5>
-										<p class="card-text" style="color: rgb(255, 193, 63);"><b class="fs-1">₱39,000</b></p>
+										<p class="card-text" style="color: rgb(255, 193, 63);"><b class="fs-1">₱{{refund_amount|intcomma}}</b></p>
 									</div>
 								</div>
 							</div>
