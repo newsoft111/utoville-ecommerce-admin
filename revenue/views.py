@@ -40,7 +40,6 @@ def revenue_list(request):
 			'refunt_amount': temp[loop_date]['refunt_amount'] if loop_date in temp else 0,
 			'order_count': temp[loop_date]['order_count'] if loop_date in temp else 0,
 		})
-	print(result)
 
 	return render(request, 'revenue/revenue_list.html', {
 		"revenue_admin_objs": result,
