@@ -29,7 +29,7 @@
 												<input type="checkbox" class="form-check-input" id="checkAll">		
 											</div>
 										</th>
-										<th scope="col" style="width: 100px">No.</th>
+										<th scope="col" style="width: 100px">수정</th>
 										<th scope="col">상품명</th>
 										<th scope="col">옵션</th>
 										<th scope="col">판매가</th>
@@ -52,19 +52,19 @@
 											</div>
 										</th>	
 										<td>
-											<a href="#!" class="text-link fw-medium">123</a>
+											<a href="{% url 'product:update' productList.pk %}" class="btn btn-primary">수정하기</a>
 										</td>
 										<td>
-											<a href="#!" class="text-link fw-medium">{{productList.name}}</a>
-										</td>
-										<td>
-											123
+											<span class="fw-medium">{{productList.product_name}}</span>
 										</td>
 										<td>
 											123
 										</td>
 										<td>
-											<span href="#" class="badge badge-soft-primary">취소</span>
+											123
+										</td>
+										<td>
+											<span class="badge badge-soft-primary">취소</span>
 										</td>
 									</tr><!-- end tr -->
 									{% endfor %}
