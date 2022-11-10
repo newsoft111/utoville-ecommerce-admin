@@ -21,6 +21,22 @@
 		
     </head>
 
+	<style>
+	.vertical-simple-menu	{
+		display: none;
+			width: 69px;
+    z-index: 1005;
+    background: #fff;
+    bottom: 0;
+    margin-top: 0;
+    position: fixed;
+    top: 0;
+    border-right: 1px solid #e9ebef;
+		}
+		.vertical-simple-menu.show {
+			display: block;
+		}
+	</style>
     
     <body data-sidebar-size="lg" data-layout-mode="light">
 		<div id="layout-wrapper">
@@ -54,8 +70,7 @@
 				</div>
 			</header>
 			<!-- ========== Left Sidebar Start ========== -->
-			<div class="vertical-menu">
-		
+			<div class="vertical-menu">	
 				<!-- LOGO -->
 				<div class="navbar-brand-box">
 		
@@ -143,9 +158,106 @@
 			</div>
 			<!-- Left Sidebar End -->
 		
+			<!-- Responsive Left Sidebar -->
+			<div class="vertical-simple-menu">	
+				<!-- LOGO -->
+				<div class="navbar-brand-box">
+		
+					<a href="index.html" class="logo">
+						<span class="logo-lg">
+							<img src="{% static 'images/logo-dark.png' %}" alt="" height="22">
+						</span>
+						<span class="logo-sm">
+							<img src="{% static 'images/logo-sm-dark.png' %}" alt="" height="22">
+						</span>
+					</a>
+				</div>
+		
+				<button type="button" class="btn btn-sm px-3 font-size-16 header-item vertical-menu-btn">
+					<i class="fa fa-fw fa-bars"></i>
+				</button>
+		
+				<div data-simplebar class="sidebar-menu-scroll">
+		
+					<!--- Sidemenu -->
+					<div id="sidebar-menu">
+						<!-- Left Menu Start -->
+						<ul class="metismenu list-unstyled" id="side-menu">
+							<li>
+								<a href="{% url 'main:index' %}">
+									<i class="icon nav-icon" data-feather="monitor"></i>
+								
+								</a>
+							</li>
+
+						
+							<li>
+								<a href="{% url 'account:list' %}">
+									<i class="icon nav-icon" data-feather="user"></i>
+								
+								</a>
+							</li>
+
+				
+							<li>
+								<a href="{% url 'qna:list' %}">
+									<i class="icon nav-icon" data-feather="message-square"></i>
+						
+								</a>
+							</li>
+
+						
+							<li>
+								<a href="{% url 'profit:list' %}">
+									<i class="icon nav-icon" data-feather="tag"></i>
+								
+								</a>
+							</li>
+
+							
+							<li>
+								<a href="{% url 'revenue:list' %}">
+									<i class="icon nav-icon" data-feather="tag"></i>
+						
+								</a>
+							</li>
+
+					
+							<li>
+								<a href="{% url 'product:list' %}">
+									<i class="icon nav-icon" data-feather="briefcase"></i>
+							
+								</a>
+							</li>
+							
+			
+							<li>
+								<a href="{% url 'order:list' %}">
+									<i class="icon nav-icon" data-feather="briefcase"></i>
+							
+								</a>
+							</li>
+		
+						</ul>
+					</div>
+					<!-- Sidebar -->
+				</div>
+			</div>
+			<!-- Left Sidebar End -->
 			
 		
 			<!-- ============================================================== -->
 			<!-- Start right Content here -->
 			<!-- ============================================================== -->
 			<div class="main-content">
+
+
+<script>
+let verticalMenu = document.querySelector(".vertical-simple-menu");
+let verticalMenuBtn = document.querySelector(".vertical-menu-btn");
+console.log(verticalMenu,verticalMenuBtn)
+verticalMenuBtn.addEventListener("click", function(e){
+	e.preventDefault();
+	verticalMenu.classList.add("show");
+});
+</script>
