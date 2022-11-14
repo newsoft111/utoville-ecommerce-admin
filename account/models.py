@@ -19,7 +19,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	ctl_seq2 = models.PositiveIntegerField(null=True)
 	ctl_seq3 = models.PositiveIntegerField(null=True)
 	ctl_seq4 = models.PositiveIntegerField(null=True)
-	point = models.PositiveIntegerField()
+	point = models.DecimalField(max_digits=14, decimal_places=2)
 	mb_name = models.CharField(max_length=100)
 	mb_type = models.CharField(max_length=1)
 	mb_status = models.CharField(max_length=1)
@@ -42,17 +42,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 	class Meta:
 		db_table = 'member_tb'
 
-	def get_member_type(self):
-		mb_type = self.mb_type
-		dict = {
-			"R": "일반회원",
-			"S": "경비회원",
-			"M": "관리소",
-			"G": "게스트"
-		}
-		if mb_type == "R":
-			return dict[mb_type]
-
 
 class UserShippingAddress(models.Model):
 	user = models.ForeignKey(
@@ -69,14 +58,3 @@ class UserShippingAddress(models.Model):
 
 	class Meta:
 		db_table = 'member_shipping_address_tb'
-
-
-class UserSeller(models.Model):
-	user = models.ForeignKey(
-				User,
-				on_delete=models.CASCADE
-	)
-	balance = models.PositiveIntegerField(default=0)
-
-	class Meta:
-		db_table = 'member_seller_tb'
