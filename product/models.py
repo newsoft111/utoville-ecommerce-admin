@@ -58,6 +58,10 @@ class Product(models.Model):
 	class Meta:
 		db_table = 'ecommerce_product'
 
+	@property
+	def amount(self):
+		return int(self.price)
+
 
 class ProductArea(models.Model):
 	product = models.ForeignKey(
