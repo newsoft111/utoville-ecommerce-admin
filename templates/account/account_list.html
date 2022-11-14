@@ -4,7 +4,58 @@
 {% load humanize %}
 
 <link href="{% static 'css/nice-select.css' %}" rel="stylesheet">
+<style>
+/**
+ * An example CSS of how to render a table responsively.
+ * It enables stacking of row data on mobile devices.
+ * Only do this for view mode (not for edit mode).
+ *
+ * On each cell rendered, it adds a user-defined attribute 
+ * 'data-label' with value matching the column header text.
+ */
+ @media only screen and (max-width: 767px) {
+ 	table {
+    border: 0;
+  }
 
+ table caption {
+    font-size: 1.3em;
+  }
+
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    text-align: right;
+  }
+
+   table td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+  }
+
+  table td:last-child {
+    border-bottom: 0;
+  }
+}
+</style>
 <div class="page-content">
 	<div class="container-fluid">
 		<div class="row">
@@ -13,6 +64,7 @@
 					<div class="card-header justify-content-between d-flex align-items-center">
 						<h4 class="card-title">회원 관리</h4>
 						<div class="text-end">
+							<span class="btn btn-danger" id="listcheckAll" onclick="checkbox_manager();">전체선택</span>
 							<span class="remove-btn btn btn-light" onclick="remove_checked_item();">체크삭제</span>
 						</div>
 					</div>
@@ -20,11 +72,10 @@
 						<form>
 							<div class="d-sm-inline-flex mb-3">
 								<select class="px-nice-select me-1" name="category">
-									<option value="" data-display="카테고리">카테고리</option>
 									<option value="0">이름</option>
 									<option value="1">아이디</option>
 								</select>
-								<input type="text" name="keyword" class="form-control" placeholder="캠페인 검색">
+								<input type="text" name="keyword" class="form-control">
 								<button type="submit" style="width:100px;" class="btn btn-primary mx-1">검색</button>
 							</div>
 						</form>
@@ -50,20 +101,20 @@
 								<tbody>
 									<tr>
 										{% for account_obj in account_objs %}
-										<th scope="row">
+										<td scope="row">
 											<div class="form-check font-size-16">
 												<input type="checkbox" class="form-check-input list-check" id="contacusercheck">
 												<label class="form-check-label" for="contacusercheck"></label>
 											</div>
-										</th>
-										<th scope="row">{{forloop.counter}}</th>
-										<td>{{account_obj.get_member_type}}</td>
-										<td>{{account_obj.mb_name}}</td>
-										<td>{{account_obj.username}}</td>
-										<td>{{account_obj.mb_phone}}</td>
-										<td>{{account_obj.point}}</td>
-										<td>{{account_obj.mb_regdate|date:'Y-m-d H:i:s'}}</td>
-										<td>
+										</td>
+										<td data-label="No." scope="row">{{forloop.counter}}</td>
+										<td data-label="회원 유형">{{account_obj.get_member_type}}</td>
+										<td data-label="이름">{{account_obj.mb_name}}</td>
+										<td data-label="아이디">{{account_obj.username}}</td>
+										<td data-label="전화번호/휴대폰">{{account_obj.mb_phone}}</td>
+										<td data-label="포인트">{{account_obj.point}}</td>
+										<td data-label="가입일">{{account_obj.mb_regdate|date:'Y-m-d H:i:s'}}</td>
+										<td data-label="관리">
 											<span class="btn btn-light">수정</span>
 											<span class="btn btn-secondary">삭제</span>
 										</td>
@@ -109,9 +160,38 @@
 <script src="{% static 'js/pages/jquery.nice-select.min.js' %}"></script>
 
 <script>
+
 $(document).ready(function(){
 	$('select').niceSelect();
 });
+
+function checkbox_manager() {
+	const allboxes = document.querySelectorAll(".list-check");
+	// if some of the checkbox is checked
+	const isSomeCheck = [...allboxes].some(item => item.checked);
+	
+	// if all are checked
+	const isAllChecked = [...allboxes].every(item => item.checked);
+	// if some are checked then on click of button check all
+	if (!isSomeCheck) {
+		allboxes.forEach(item => item.checked = true);
+	} else if (isAllChecked && isSomeCheck) {
+		allboxes.forEach(item => item.checked = false);
+	} else{
+		allboxes.forEach(item => item.checked = true);
+	}
+}
+
+function remove_checked_item() {
+	const item_list = document.querySelectorAll("input[name=cart_item_id][type=checkbox]:checked");
+
+	let arr = [];
+
+	item_list.forEach(ele => arr.push(ele.value));
+
+	remove_cart_submit(arr);
+}
+
 </script>
 
 

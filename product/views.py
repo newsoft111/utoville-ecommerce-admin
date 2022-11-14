@@ -190,6 +190,14 @@ def product_update(request, product_id):
 			for thumbnail in thumbnails:
 				ProductThumbnail.objects.create(product=product_obj, thumbnail=thumbnail)
 
+			if options_data:
+				list_data = json.loads(request.POST.get('options_data'))
+				for obj in list_data:
+					for key, value in obj.items():
+						prod_var_obj = ProductVariant.objects.create(product=product_obj, variant=key)
+						for k, v in value.items():
+							ProductVariantValue.objects.create(variant=prod_var_obj, value=k, price=v)
+
 			result = {'result': '200', 'result_text': '등록이 완료되었습니다.'}
 			return JsonResponse(result)
 
