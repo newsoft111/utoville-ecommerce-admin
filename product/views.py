@@ -91,7 +91,7 @@ def product_write(request):
 				ProductThumbnail.objects.create(product=product_obj, thumbnail=thumbnail)
 
 			if options_data:
-				list_data = json.loads(request.POST.get('options_data'))
+				list_data = json.loads(options_data)
 				for obj in list_data:
 					for key, value in obj.items():
 						prod_var_obj = ProductVariant.objects.create(product=product_obj, variant=key)

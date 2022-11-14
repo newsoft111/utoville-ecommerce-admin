@@ -43,6 +43,7 @@ def qna_detail(request, qna_id):
 				
 		try:
 			qna_obj.answer = answer
+			qna_obj.answered_at = datetime.now()
 			qna_obj.save()
 
 			result = '200'
