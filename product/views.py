@@ -38,6 +38,7 @@ def product_write(request):
 		category_first = request.POST.get('category_first')
 		category_second = request.POST.get('category_second')
 		category_third = request.POST.get('category_third')
+		options_data = request.POST.get('options_data')
 
 		try:
 			thumbnails = request.FILES.getlist('thumbnail')
@@ -90,7 +91,7 @@ def product_write(request):
 				ProductThumbnail.objects.create(product=product_obj, thumbnail=thumbnail)
 
 			if options_data:
-				list_data = json.loads(request.POST.get('options_data'))
+				list_data = json.loads(options_data)
 				for obj in list_data:
 					for key, value in obj.items():
 						prod_var_obj = ProductVariant.objects.create(product=product_obj, variant=key)
