@@ -177,7 +177,7 @@ def product_update(request, product_id):
 			return JsonResponse(result)
 
 		try:
-			product_obj = Product()
+			product_obj = get_object_or_404(Product, pk=product_id)
 			product_obj.user = request.user
 			product_obj.category_first = category_third_obj.parent.parent
 			product_obj.category_second = category_third_obj.parent
@@ -188,17 +188,18 @@ def product_update(request, product_id):
 			product_obj.save()
 
 			for thumbnail in thumbnails:
-				ProductThumbnail.objects.create(product=product_obj, thumbnail=thumbnail)
+				ProductThumbnail.objects.get_or_create(product=product_obj, thumbnail=thumbnail)
 
 			if options_data:
+				ProductVariant.objects.filter(product=product_obj).delete()
 				list_data = json.loads(request.POST.get('options_data'))
 				for obj in list_data:
 					for key, value in obj.items():
-						prod_var_obj = ProductVariant.objects.create(product=product_obj, variant=key)
-						for k, v in value.items():
-							ProductVariantValue.objects.create(variant=prod_var_obj, value=k, price=v)
-
-			result = {'result': '200', 'result_text': '등록이 완료되었습니다.'}
+						prod_var_obj, created = ProductVariant.objects.get_or_create(product=product_obj, variant=key)
+						if created:
+							for k, v in value.items():
+								ProductVariantValue.objects.get_or_create(variant=prod_var_obj, value=k, price=v)
+			result = {'result': '200', 'result_text': 'Update successfully!!'}
 			return JsonResponse(result)
 
 		except Exception as e:
@@ -221,10 +222,23 @@ def product_update(request, product_id):
 				for l3_cat in l3_cats:
 					l2_data[l2_cat.name].append({"name":l3_cat.name, "id":l3_cat.pk})
 				l1_l2_l3_cat_data[l1.name].append(l2_data)
-		
+		prod_variant_data = []
 		product_obj = get_object_or_404(Product, pk=product_id)
-
-		return render(request, 'product/product_write.html', context={"cats_data": l1_l2_l3_cat_data})
+		prod_var_obj = ProductVariant.objects.filter(product_id=product_id)
+		for i in prod_var_obj:
+			var_dict = {}
+			val_objs = ProductVariantValue.objects.filter(variant=i)
+			val_dict = {}
+			for val_obj in val_objs:
+				val_dict[val_obj.value] = int(val_obj.price)
+			var_dict[i.variant] = val_dict
+			prod_variant_data.append(var_dict)
+		prod_thumb = ProductThumbnail.objects.filter(product=product_obj)
+		ctx_data = {"cats_data": l1_l2_l3_cat_data, "product": product_obj, "thumbnail": prod_thumb,
+					"variant_val_obj": prod_variant_data,
+					"cat_sec": CategorySecond.objects.filter(parent=product_obj.category_first),
+					"cat_third": CategoryThird.objects.filter(parent=product_obj.category_second)}
+		return render(request, 'product/product_update.html', context=ctx_data)
 
 
 
