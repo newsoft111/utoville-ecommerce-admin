@@ -25,7 +25,6 @@ def profit_list(request):
 		end_date = datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d")
 
 	start_date = start_date + timedelta(days=1)
-	end_date = end_date
 	
 	profit_done_objs = ProfitDone.objects.filter(created_at__range=[start_date, end_date])
 
