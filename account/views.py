@@ -272,6 +272,10 @@ def account_list(request):
 	pagenator   = Paginator(account_objs, 12)
 	account_objs = pagenator.get_page(page)
 
+	page        = int(request.GET.get('p', 1))
+	pagenator   = Paginator(account_objs, 10)
+	account_objs = pagenator.get_page(page)
+
 	return render(request, 'account/account_list.html', {
 		"seo":seo,
 		'account_objs': account_objs

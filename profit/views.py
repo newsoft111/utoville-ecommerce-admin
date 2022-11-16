@@ -24,8 +24,9 @@ def profit_list(request):
 	if request.GET.get("end_date") is not None and request.GET.get("end_date") != '':
 		end_date = datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d")
 
-	end_date = end_date + timedelta(days=1)
-
+	start_date = start_date + timedelta(days=1)
+	end_date = end_date
+	
 	profit_done_objs = ProfitDone.objects.filter(created_at__range=[start_date, end_date])
 
 	page        = int(request.GET.get('p', 1))
