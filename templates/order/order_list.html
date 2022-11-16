@@ -89,7 +89,7 @@
 										</td>
 
 										<td>
-											<span href="#" class="badge badge-soft-primary">취소</span>
+											<span href="#" class="badge badge-soft-primary">{{order_item_obj.order_item_status}}</span>
 										</td>
 
 										<td>
@@ -105,11 +105,11 @@
 										</td>
 
 										<td>
-											{{order_item_obj.order.username}}
+											{{order_item_obj.order.user.mb_name}}
 										</td>
 
 										<td>
-											{{order_item_obj.order.username}}
+											{{order_item_obj.order.user.mb_phone}}
 										</td>
 
 										<td>
@@ -117,7 +117,7 @@
 										</td>
 
 										<td>
-											{{order_item_obj.order.paid_at}}
+											{{order_item_obj.order.payment.paid_at}}
 										</td>
 									</tr><!-- end tr -->
 									{% endfor %}
