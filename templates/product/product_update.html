@@ -190,7 +190,7 @@
 							<div class="mb-3">
 								<label class="form-label">상세정보</label>
 								<input type="hidden" name="content">
-								<div id="snow-editor" style="height: 300px;">{{product.content}}</div>
+								<div id="snow-editor" style="height: 300px;">{{product.content|safe}}</div>
 							</div>
 
 							<div class="text-end">
