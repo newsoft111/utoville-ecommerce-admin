@@ -56,17 +56,13 @@
   }
 }
 </style>
-<div class="page-content">
+<div class="page-content ">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
 					<div class="card-header justify-content-between d-flex align-items-center">
 						<h4 class="card-title">회원 관리</h4>
-						<div class="text-end">
-							<span class="btn btn-danger" id="listcheckAll" onclick="checkbox_manager();">전체선택</span>
-							<span class="remove-btn btn btn-light" onclick="remove_checked_item();">체크삭제</span>
-						</div>
 					</div>
 					<div class="card-body">
 						<form>
@@ -83,11 +79,6 @@
 							<table class="table mb-0 text-center table-check">
 								<thead class="table-light">
 									<tr>
-										<th scope="col" style="width: 50px;">
-											<div class="form-check font-size-16">
-												<input type="checkbox" class="form-check-input" id="checkAll">
-											</div>
-										</th>
 										<th>No.</th>
 										<th>회원 유형</th>
 										<th>이름</th>
@@ -101,12 +92,6 @@
 								<tbody>
 									<tr>
 										{% for account_obj in account_objs %}
-										<td scope="row">
-											<div class="form-check font-size-16">
-												<input type="checkbox" class="form-check-input list-check" id="contacusercheck">
-												<label class="form-check-label" for="contacusercheck"></label>
-											</div>
-										</td>
 										<td data-label="No." scope="row">{{forloop.counter}}</td>
 										<td data-label="회원 유형">{{account_obj.get_member_type}}</td>
 										<td data-label="이름">{{account_obj.mb_name}}</td>

@@ -231,6 +231,8 @@ def product_update(request, product_id):
 def product_delete(request):
 	jsonData = json.loads(request.body)
 	product_id = jsonData.get('cart_item_id_arr')
+	print(product_id)
+	
 
 	Product.objects.filter(pk__in=product_id).update(
 		is_deleted = True, 

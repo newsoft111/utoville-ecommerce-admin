@@ -346,7 +346,7 @@ addoptionBtn.addEventListener("click", function(){
 	html = `<tr><td><input class="form-control" type="text" placeholder="옵션 항목 입력하세요."></td>`;
 	html += `<td><input class="form-control" type="text" placeholder="가격을 입력하세요." value="0" maxlength="11" name="option-price" id="option-price-input"></td>`;
 	html += '<td><button type="button" class="btn btn-secondary" onclick=removeOptionItem(this);>삭제</button></td></tr>'
-	document.querySelector('tbody[id=option-list]').innerHTML +=  html;
+	document.querySelector('tbody[id=option-list]').insertAdjacentHTML("beforeend", html);
 });
 
 cats_data = {{cats_data|safe}};

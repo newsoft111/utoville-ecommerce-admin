@@ -3,17 +3,20 @@ from .models import *
 from django.db.models import Q, Sum
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from django.core.paginator import Paginator
 
 def revenue_list(request):
 	now = date.today()
 	start_date = now-relativedelta(months=1)
 	end_date = now
-	
-	if request.GET.get("start_date"):
+
+	if request.GET.get("start_date") is not None and request.GET.get("start_date") != '':
 		start_date = datetime.strptime(request.GET.get("start_date"), "%Y-%m-%d")
-	if request.GET.get("end_date"):
+
+	if request.GET.get("end_date") is not None and request.GET.get("end_date") != '':
 		end_date = datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d")
-		
+
+	end_date = end_date + timedelta(days=1)
 
 
 	revenue_admin_objs = RevenueAdmin.objects.filter(date__range = [start_date, end_date])
@@ -40,6 +43,10 @@ def revenue_list(request):
 			'refunt_amount': temp[loop_date]['refunt_amount'] if loop_date in temp else 0,
 			'order_count': temp[loop_date]['order_count'] if loop_date in temp else 0,
 		})
+
+	page        = int(request.GET.get('p', 1))
+	pagenator   = Paginator(result, 10)
+	result = pagenator.get_page(page)
 
 	return render(request, 'revenue/revenue_list.html', {
 		"revenue_admin_objs": result,
