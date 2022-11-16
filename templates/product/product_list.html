@@ -47,7 +47,7 @@
 									<tr>
 										<th scope="row">
 											<div class="form-check font-size-16">
-												<input type="checkbox" class="form-check-input" id="contacusercheck1">
+												<input type="checkbox" class="form-check-input" value="{{productList.pk}}" name="product_id">
 												<label class="form-check-label" for="contacusercheck1"></label>
 											</div>
 										</th>	
@@ -149,11 +149,11 @@ function remove_checked_item() {
 
 	item_list.forEach(ele => arr.push(ele.value));
 
-	remove_cart_submit(arr);
+	remove_product_submit(arr);
 }
 
 
-async function remove_cart_submit(cart_item_id) {
+async function remove_product_submit(cart_item_id) {
 	if(is_run == true) {
 		openModal('알림','잠시후에 다시시도 해주세요.');
 		return false;
