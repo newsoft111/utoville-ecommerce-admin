@@ -16,7 +16,8 @@ def revenue_list(request):
 	if request.GET.get("end_date") is not None and request.GET.get("end_date") != '':
 		end_date = datetime.strptime(request.GET.get("end_date"), "%Y-%m-%d")
 
-	end_date = end_date + timedelta(days=1)
+	start_date = start_date + timedelta(days=1)
+	end_date = end_date
 
 
 	revenue_admin_objs = RevenueAdmin.objects.filter(date__range = [start_date, end_date])

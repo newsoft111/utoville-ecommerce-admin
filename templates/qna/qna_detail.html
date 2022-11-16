@@ -110,7 +110,7 @@ async function qna_submit() {
 	.then(data => {
 		is_run  = false;
 		if (data.result == '200') {
-			openModal("알림", data.result_text, '#qnaDeleteModal', 'reload');
+			openModal("알림", data.result_text, '#qnaDeleteModal', `location.href="{% url 'qna:list' %}";`);
 		} else {
 			openModal("알림", data.result_text, '#qnaDeleteModal');
 		}
