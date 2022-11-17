@@ -83,6 +83,10 @@ class ProductVariant(models.Model):
 			on_delete=models.CASCADE
 	)
 	variant = models.CharField(max_length=255)
+	is_deleted = models.BooleanField(default=False)
+	deleted_at = models.DateTimeField(null=True)
+
+	objects = ModelDeleteManager()
 
 	class Meta:
 		db_table = 'ecommerce_product_variant'
@@ -98,7 +102,11 @@ class ProductVariantValue(models.Model):
 	)
 	value = models.CharField(max_length=255)
 	price = models.DecimalField(max_digits=14, decimal_places=2)
+	is_deleted = models.BooleanField(default=False)
+	deleted_at = models.DateTimeField(null=True)
 
+	objects = ModelDeleteManager()
+	
 	class Meta:
 		db_table = 'ecommerce_product_variant_value'
 
