@@ -191,14 +191,34 @@ def product_update(request, product_id):
 				ProductThumbnail.objects.get_or_create(product=product_obj, thumbnail=thumbnail)
 
 			if options_data:
-				ProductVariant.objects.filter(product=product_obj).delete()
+				product_var_objs = ProductVariant.objects.filter(product=product_obj)
+				product_var_list = product_var_objs.values_list('id', flat=True).order_by( "-id")
+				product_var_objs.update(
+					is_deleted=True,
+					deleted_at = datetime.now()
+				)
+				
+				ProductVariantValue.objects.filter(pk_in=product_var_list).update(
+					is_deleted=True,
+					deleted_at = datetime.now()
+				)
+
 				list_data = json.loads(request.POST.get('options_data'))
 				for obj in list_data:
 					for key, value in obj.items():
 						prod_var_obj, created = ProductVariant.objects.get_or_create(product=product_obj, variant=key)
 						if created:
 							for k, v in value.items():
-								ProductVariantValue.objects.get_or_create(variant=prod_var_obj, value=k, price=v)
+								price = re.sub(r'[^0-9.]', '',str(v))
+								prod_var_val_obj, created = ProductVariantValue.objects.get_or_create(variant=prod_var_obj, value=k, price=price)
+								if not created:
+									prod_var_val_obj.is_deleted=False
+									prod_var_val_obj.deleted_at=None
+									prod_var_val_obj.save()
+						else:
+							prod_var_obj.is_deleted=False
+							prod_var_obj.deleted_at=None
+							prod_var_obj.save()
 			result = {'result': '200', 'result_text': 'Update successfully!!'}
 			return JsonResponse(result)
 
@@ -222,6 +242,7 @@ def product_update(request, product_id):
 				for l3_cat in l3_cats:
 					l2_data[l2_cat.name].append({"name":l3_cat.name, "id":l3_cat.pk})
 				l1_l2_l3_cat_data[l1.name].append(l2_data)
+				
 		prod_variant_data = []
 		product_obj = get_object_or_404(Product, pk=product_id)
 		prod_var_obj = ProductVariant.objects.filter(product_id=product_id)
