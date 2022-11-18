@@ -8,6 +8,13 @@ def upload_to(instance, filename):
 	return '/'.join(['account' , str(instance.id), nowDate, filename])
 
 class User(AbstractBaseUser, PermissionsMixin):
+	USER_TYPE_CHOICES = (
+        ('R','일반회원'),
+        ('S','경비회원'),
+        ('M','관리소'),
+		('G','게스트')
+    )
+
 	id = models.AutoField(primary_key=True, db_column='mb_seq')
 	username = models.CharField(max_length=200,unique=True, db_column='mb_id')
 	password = models.CharField(max_length=200, db_column='mb_password')
@@ -21,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	ctl_seq4 = models.PositiveIntegerField(null=True)
 	point = models.DecimalField(max_digits=14, decimal_places=2)
 	mb_name = models.CharField(max_length=100)
-	mb_type = models.CharField(max_length=1)
+	mb_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES)
 	mb_status = models.CharField(max_length=1)
 	mb_profile = models.ImageField(upload_to=upload_to, default="avater.jpg")
 	mb_profile_org = models.CharField(max_length=300)
@@ -39,8 +46,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	objects = UserManager()
 
+
 	class Meta:
 		db_table = 'member_tb'
+
 
 
 class UserShippingAddress(models.Model):
