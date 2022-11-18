@@ -42,14 +42,16 @@
 								<button type="button" class="btn btn-outline-primary" onclick="lastSixMonthBtn()">6개월</button>
 							</div>
 							<hr>
-							<div class="d-flex align-items-center ms-5">
-								<input class="form-control form-radius" name="start_date" type="date" id="start-date-input">
-								&nbsp;&nbsp;~&nbsp;&nbsp;
-								<input class="form-control form-radius" name="end_date" type="date" id="end-date-input">
-								<a href="#searchCollapse" data-bs-target="#" data-bs-toggle="collapse" class="nav-link search-link lh-1 text-dark">
-									<i class="bx bx-search-alt-2 fs-4"></i>
-								</a>
-							</div>
+							<form action="{{request.path}}" method="GET" name="dateSearchForm">
+								<div class="d-flex align-items-center ms-5">
+									<input class="form-control form-radius" name="start_date" type="date" id="start-date-input">
+									&nbsp;&nbsp;~&nbsp;&nbsp;
+									<input class="form-control form-radius" name="end_date" type="date" id="end-date-input">
+									<button type="submit" data-bs-target="#" data-bs-toggle="collapse" class="ms-2 border-0 bg-white">
+										<i class="bx bx-search-alt-2 fs-4"></i>
+									</button>
+								</div>
+							</form>
 						</div>
 						<div class="row justify-content-center">
 							<div class="col-md-6">
@@ -147,10 +149,28 @@
 </div>
 
 <script>
-document.getElementById("start-date-input").value = new Date().toISOString().slice(0,10);
+
+//==============================
+// URL 파라미터 날짜 시작일에 적용
+//==============================
+
+const curUrl = window.location.href;
+const url = new URL(curUrl);
+const urlParams = url.searchParams;
+
+/*종료 날짜 오늘 날짜로 지정*/
 document.getElementById("end-date-input").value = new Date().toISOString().slice(0,10);
 
-lastOneMonthBtn();
+/*새로 페이지 들어올 시 한달 전 날짜로 셋팅*/
+if (urlParams.has('start_date') == false) {
+	lastOneMonthBtn();
+}else{
+	document.getElementById("start-date-input").value = urlParams.get('start_date');
+}
+
+//==============================
+// 기간별 날짜 적용
+//==============================
 
 function todayBtn(){
 	document.getElementById("start-date-input").value = new Date().toISOString().slice(0,10);
