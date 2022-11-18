@@ -93,7 +93,7 @@
 									<tr>
 										{% for account_obj in account_objs %}
 										<td data-label="No." scope="row">{{forloop.counter}}</td>
-										<td data-label="회원 유형">{{account_obj.get_member_type}}</td>
+										<td data-label="회원 유형">{{account_obj.get_mb_type_display }}</td>
 										<td data-label="이름">{{account_obj.mb_name}}</td>
 										<td data-label="아이디">{{account_obj.username}}</td>
 										<td data-label="전화번호/휴대폰">{{account_obj.mb_phone}}</td>

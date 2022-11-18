@@ -21,10 +21,6 @@ class ProfitDone(models.Model):
 		db_table = 'ecommerce_profit_done'
 
 
-class ProfitManager(models.Manager):
-	def get_queryset(self):
-		return super(ProfitManager, self).get_queryset().filter(profit_done=None)
-
 class Profit(models.Model):
 	order_item = models.ForeignKey(
 			OrderItem,
@@ -44,8 +40,7 @@ class Profit(models.Model):
 			on_delete=models.CASCADE,
 			null=True
 	)
-	
-	objects = ProfitManager()
+
 	class Meta:
 		db_table = 'ecommerce_profit'
 	
