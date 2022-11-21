@@ -51,8 +51,12 @@ def profit_export(request):
 	q = Q()
 	q &= Q(profit_done=profit_done_obj)
 
-	profit_objs = Profit.objects.filter(q).order_by('-id').values_list(
-		'created_at', 
+	profit_objs = Profit.objects.filter(q).order_by(
+		'-id'
+	).extra(
+		select={'created_at_date': 'DATE(created_at)'}
+	).values_list(
+		'created_at_date', 
 		'charge_amount',
 		'payment_fee', 
 		'profit_amount',
@@ -77,10 +81,9 @@ def profit_export(request):
 	#유저정보를 한줄씩 작성한다.
 	for profit_obj in profit_objs:
 		row_num +=1
-		print(profit_obj)
 		for col_num, attr in enumerate(profit_obj):
 			print(attr)
-			ws.write(row_num, col_num, attr)
+			ws.write(row_num, col_num, str(attr))
 					
 	wb.save(response)
 	
