@@ -82,7 +82,6 @@ def profit_export(request):
 	for profit_obj in profit_objs:
 		row_num +=1
 		for col_num, attr in enumerate(profit_obj):
-			print(attr)
 			ws.write(row_num, col_num, str(attr))
 					
 	wb.save(response)
