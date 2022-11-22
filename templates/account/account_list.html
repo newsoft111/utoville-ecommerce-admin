@@ -47,6 +47,10 @@
   table td:last-child {
     border-bottom: 0;
   }
+
+  .selectArea, .form-control {
+	width: 100%;
+  }
 }
 @media only screen and (max-width: 575px){
 	.nice-select {
@@ -74,13 +78,8 @@
 						<h4 class="card-title">회원 관리</h4>
 					</div>
 					<div class="card-body">
-						<form>
-							<div class="d-sm-inline-flex mb-3">
-								<select class="px-nice-select me-1" name="memberCategory">
-									<option>회원유형</option>
-									<option value="residents">Residents</option>
-									<option value="sellers">Sellers</option>
-								</select>
+						<form class="d-block d-md-flex align-items-center">
+							<div class="d-sm-inline-flex selectArea">
 								<select class="px-nice-select me-1" name="category">
 									<option value="0">이름</option>
 									<option value="1">아이디</option>
@@ -88,9 +87,18 @@
 								<input type="text" name="keyword" class="form-control">
 								<button type="submit" style="width:70px;" class="btn btn-primary mx-1 member-search-btn">검색</button>
 							</div>
+							<div class="ms-md-3 mt-3 mt-md-0">
+								<div class="d-flex align-items-center border rounded-3">
+									<span class="border-end" style="padding: 10px 20px; border-color: #e2e5e8; font-size: 14px;">회원 유형</span>
+									<div style="padding: 10px 20px; border-color: #e2e5e8;">
+										<input class="form-check-input" type="radio" name="checkMember"><span class= ms-1 style="font-size: 13px;">Regidents</span>
+										<input class="form-check-input ms-3" type="radio" name="checkMember"><span class="ms-1" style="font-size: 13px;">Sellers</span>
+									</div>
+								</div>
+							</div>
 						</form>
 						<div class="table-responsive">
-							<table class="table mb-0 text-center table-check">
+							<table class="table mt-3 mb-0 text-center table-check">
 								<thead class="table-light">
 									<tr>
 										<th>No.</th>
