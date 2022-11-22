@@ -33,17 +33,3 @@ ul, li {
     border-right: 1px solid #0d6efd;
     border-bottom: 1px solid #0d6efd;
 }
-
-@media only screen and (max-width: 575px){
-	.nice-select {
-		width: 100% !important;
-		margin-bottom: 10px;
-	}
-	.nice-select > ul {
-		width: 100%;
-	}
-	button[type=submit] {
-		width: 100% !important;
-		margin: 10px 0 0 0 !important;
-	}
-}

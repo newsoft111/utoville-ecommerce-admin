@@ -5,14 +5,7 @@
 
 <link href="{% static 'css/nice-select.css' %}" rel="stylesheet">
 <style>
-/**
- * An example CSS of how to render a table responsively.
- * It enables stacking of row data on mobile devices.
- * Only do this for view mode (not for edit mode).
- *
- * On each cell rendered, it adds a user-defined attribute 
- * 'data-label' with value matching the column header text.
- */
+
  @media only screen and (max-width: 767px) {
  	table {
     border: 0;
@@ -55,6 +48,22 @@
     border-bottom: 0;
   }
 }
+@media only screen and (max-width: 575px){
+	.nice-select {
+		width: 100% !important;
+		margin-bottom: 10px;
+	}
+	.nice-select > ul {
+		width: 100%;
+	}
+	.member-search-btn {
+		width: 100% !important;
+		margin-top: 10px !important;
+	}
+	.form-control {
+		width: 100% !important;
+	}
+}
 </style>
 <div class="page-content ">
 	<div class="container-fluid">
@@ -67,12 +76,17 @@
 					<div class="card-body">
 						<form>
 							<div class="d-sm-inline-flex mb-3">
+								<select class="px-nice-select me-1" name="memberCategory">
+									<option>회원유형</option>
+									<option value="residents">Residents</option>
+									<option value="sellers">Sellers</option>
+								</select>
 								<select class="px-nice-select me-1" name="category">
 									<option value="0">이름</option>
 									<option value="1">아이디</option>
 								</select>
 								<input type="text" name="keyword" class="form-control">
-								<button type="submit" style="width:100px;" class="btn btn-primary mx-1">검색</button>
+								<button type="submit" style="width:70px;" class="btn btn-primary mx-1 member-search-btn">검색</button>
 							</div>
 						</form>
 						<div class="table-responsive">
@@ -90,8 +104,8 @@
 									</tr>
 								</thead>
 								<tbody>
+									{% for account_obj in account_objs %}
 									<tr>
-										{% for account_obj in account_objs %}
 										<td data-label="No." scope="row">{{forloop.counter}}</td>
 										<td data-label="회원 유형">{{account_obj.get_mb_type_display }}</td>
 										<td data-label="이름">{{account_obj.mb_name}}</td>
@@ -149,7 +163,6 @@
 								</ul>
 							</div><!-- end col -->
 						</div><!-- end row -->
-
 					</div>
 				</div>
 			</div>
