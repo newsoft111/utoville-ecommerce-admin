@@ -16,10 +16,10 @@
 					</div>
 					<div class="card-body">				
 						<div class="table-responsive">					
-							<table class="table table-bordered align-middle table-nowrap table-check">
-								<thead>
+							<table class="table responsiveTable mt-3 mb-0 text-center">
+								<thead class="table-light">
 									<tr>
-										<th scope="col" style="width: 50px;"></th>
+										<th scope="col" style="width: 50px;">No.</th>
 										<th scope="col">제목</th>
 										<th scope="col" style="width: 100px;">상태</th>
 										<th scope="col" style="width:15%;">날짜</th>
@@ -28,25 +28,25 @@
 								<tbody>
 									{% for qna_obj in qna_objs %}
 									<tr>
-										<th scope="row">
+										<td scope="row" data-label="No.">
 											{{forloop.counter}}
-										</th>
+										</td>
 
-										<td>
+										<td data-label="제목">
 											<a href="{% url 'qna:detail' qna_obj.pk %}" class="text-link fw-medium">{{qna_obj.subject}}</a>
 										</td>
 
-										<td>
+										<td data-label="상태">
 											<span href="#" class="badge badge-soft-primary">
 												{% if qna_obj.answered_at is not None %}
-												답변완료
+													답변완료
 												{% else %}
-												답변대기
+													답변대기
 												{% endif %}
 											</span>
 										</td>
 
-										<td>
+										<td data-label="날짜">
 											{{qna_obj.questioned_at}}
 										</td>
 									</tr><!-- end tr -->

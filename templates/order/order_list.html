@@ -48,8 +48,8 @@
 							</div>
 						</form>			
 						<div class="table-responsive">
-							<table class="table table-bordered align-middle table-nowrap table-check">
-								<thead>
+							<table class="table responsiveTable mt-3 mb-0 text-center">
+								<thead class="table-light">
 									<tr>
 										<th scope="col" style="width: 50px;">
 											<div class="form-check font-size-16">
@@ -77,46 +77,46 @@
 									
 									{% for order_item_obj in order_item_objs %}
 									<tr>
-										<th scope="row">
+										<td scope="row">
 											<div class="form-check font-size-16">
 												<input type="checkbox" class="form-check-input" id="contacusercheck1">
 												<label class="form-check-label" for="contacusercheck1"></label>
 											</div>
-										</th>
+										</td>
 
-										<td>
+										<td data-label="주문번호">
 											<a href="#!" class="text-link fw-medium">{{order_item_obj.order_uid}}</a>
 										</td>
 
-										<td>
+										<td data-label="상태">
 											<span href="#" class="badge badge-soft-primary">{{order_item_obj.order_item_status}}</span>
 										</td>
 
-										<td>
+										<td data-label="상품명">
 											<a href="#!" class="text-link fw-medium">{{order_item_obj.product_name}}</a>
 										</td>
 
-										<td>
+										<td data-label="옵션">
 											{{order_item_obj.variant_value}}
 										</td>
 
-										<td>
+										<td data-label="수량">
 											{{order_item_obj.ordered_quantity}}개
 										</td>
 
-										<td>
+										<td data-label="이름">
 											{{order_item_obj.order.user.mb_name}}
 										</td>
 
-										<td>
+										<td data-label="연락처">
 											{{order_item_obj.order.user.mb_phone}}
 										</td>
 
-										<td>
+										<td data-label="남은수량">
 											{{order_item_obj.ordered_quantity|sub:order_item_obj.shipped_quantity}}개
 										</td>
 
-										<td>
+										<td data-label="결제일">
 											{{order_item_obj.order.payment.paid_at}}
 										</td>
 									</tr><!-- end tr -->

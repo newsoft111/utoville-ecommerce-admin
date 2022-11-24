@@ -74,8 +74,8 @@
 							</a>
 						</div>
 						<div class="table-responsive">
-							<table class="table mt-3 text-center">
-								<thead style="background-color: #f5f6f9;">
+							<table class="table responsiveTable mt-3 mb-0 text-center">
+								<thead class="table-light">
 									<tr>
 										<th>날짜</th>
 										<th>결제금액</th>
@@ -86,10 +86,10 @@
 								<tbody>
 									{% for revenue_admin_obj in revenue_admin_objs %}
 									<tr>
-										<th>{{revenue_admin_obj.date}}</th>
-										<td>₱{{revenue_admin_obj.payment_amount|intcomma}}</td>
-										<td>₱{{revenue_admin_obj.refunt_amount|intcomma}}</td>
-										<td>{{revenue_admin_obj.order_count|intcomma}}</td>
+										<td data-label="날짜">{{revenue_admin_obj.date}}</td>
+										<td data-label="결제금액">₱{{revenue_admin_obj.payment_amount|intcomma}}</td>
+										<td data-label="환불금액">₱{{revenue_admin_obj.refunt_amount|intcomma}}</td>
+										<td data-label="주문수">{{revenue_admin_obj.order_count|intcomma}}</td>
 									</tr>
 									{% endfor %}
 								</tbody>
