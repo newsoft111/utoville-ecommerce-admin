@@ -93,6 +93,7 @@
 									<tr>
 										<th>No.</th>
 										<th>회원 유형</th>
+										<th>회원 상태</th>
 										<th>이름</th>
 										<th>아이디</th>
 										<th>전화번호/휴대폰</th>
@@ -106,6 +107,7 @@
 										{% for account_obj in account_objs %}
 										<td data-label="No." scope="row">{{forloop.counter}}</td>
 										<td data-label="회원 유형">{{account_obj.get_mb_type_display }}</td>
+										<td data-label="회원 상태">{{account_obj.get_mb_status_display }}</td>
 										<td data-label="이름">{{account_obj.mb_name}}</td>
 										<td data-label="아이디">{{account_obj.username}}</td>
 										<td data-label="전화번호/휴대폰">{{account_obj.mb_phone}}</td>
@@ -113,7 +115,7 @@
 										<td data-label="가입일">{{account_obj.mb_regdate|date:'Y-m-d H:i:s'}}</td>
 										<td data-label="관리">
 											<span class="btn btn-light">수정</span>
-											<span class="btn btn-secondary">삭제</span>
+											<button type="button" onclick="account_delete_submit('{{account_obj.pk}}');" class="btn btn-secondary">탈퇴</button>
 										</td>
 									</tr>
 									{% endfor %}
@@ -174,7 +176,7 @@
 <script src="{% static 'js/pages/jquery.nice-select.min.js' %}"></script>
 
 <script>
-
+let is_run = false;
 $(document).ready(function(){
 	$('select').niceSelect();
 });
@@ -204,6 +206,35 @@ function remove_checked_item() {
 	item_list.forEach(ele => arr.push(ele.value));
 
 	remove_cart_submit(arr);
+}
+
+async function account_delete_submit(user_id) {
+	if(is_run == true) {
+		openModal('알림','잠시후에 다시시도 해주세요.');
+		return false;
+	}
+
+    is_run = true;
+
+	let form_data = new FormData();
+	form_data.append('user_id', user_id)
+    const response = await fetch("{% url 'account:delete' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: form_data
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        is_run  = false;
+        if (data.result == '200') {
+            openModal("good", data.result_text, '', 'reload');
+        } else {
+            openModal("good", data.result_text, '');
+        }
+    });
 }
 
 </script>
