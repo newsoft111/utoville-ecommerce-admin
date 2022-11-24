@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, resolve_url
+from django.shortcuts import render, redirect, resolve_url, get_object_or_404
 from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse, HttpResponseRedirect
@@ -292,8 +292,17 @@ def account_list(request):
 		'account_objs': account_objs
 	})
 
-def subscription(request):
-	return render(request, 'account/mypage/subscription.html')
 
-def cancel(request):
-	return render(request, 'account/mypage/cancel.html')
+def account_delete(request):
+	try:
+		user_obj = User.objects.get(pk=request.POST.get('user_id'))
+	except:
+		result = {'result': '201', 'result_text': '알수없는 오류입니다.'}
+		return JsonResponse(result)
+
+	user_obj.mb_status = "D"
+	user_obj.mb_del_date = datetime.now()
+	user_obj.save()
+
+	result = {'result': '200', 'result_text': '삭제가 완료되었습니다.'}
+	return JsonResponse(result)
