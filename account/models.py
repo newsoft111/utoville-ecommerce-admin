@@ -15,6 +15,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 		('G','게스트')
     )
 
+	USER_STATUS_CHOICES = (
+        ('D','탈퇴'),
+        ('Y','승인'),
+        ('N','비활성'),
+		('P','초기가입상태')
+    )
+
 	id = models.AutoField(primary_key=True, db_column='mb_seq')
 	username = models.CharField(max_length=200,unique=True, db_column='mb_id')
 	password = models.CharField(max_length=200, db_column='mb_password')
@@ -29,7 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	point = models.DecimalField(max_digits=14, decimal_places=2)
 	mb_name = models.CharField(max_length=100)
 	mb_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES)
-	mb_status = models.CharField(max_length=1)
+	mb_status = models.CharField(max_length=1, choices=USER_STATUS_CHOICES) #회원상태(D:탈퇴,Y:승인,N:비활성,P : 초기가입상태)
 	mb_profile = models.ImageField(upload_to=upload_to, default="avater.jpg")
 	mb_profile_org = models.CharField(max_length=300)
  
