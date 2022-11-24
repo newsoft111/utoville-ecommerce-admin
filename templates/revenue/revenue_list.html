@@ -5,7 +5,14 @@
 {% load util_filter %}
 {% load mathfilters %}
 
-<!-- Begin page -->
+<style>
+@media only screen and (max-width: 767px) {
+	.btn-group {
+		width: 100% !important;
+		margin-bottom: 20px;
+	}
+}
+</style>
 <div class="page-content">
 	<div class="container-fluid">
 		<div class="row">
@@ -15,7 +22,7 @@
 						<h4 class="card-title">매출 관리</h4>
 					</div>	
 					<div class="card-body p-3">
-						<div class="d-flex justify-content-center align-items-center mb-5">	
+						<div class="d-md-flex justify-content-center align-items-center mb-5">	
 							<div class="btn-group" id="date-btn">
 								<button type="button" class="btn btn-outline-primary" onclick="todayBtn()">오늘</button>
 								<button type="button" class="btn btn-outline-primary" onclick="lastWeekBtn()">1주일</button>
@@ -23,9 +30,8 @@
 								<button type="button" class="btn btn-outline-primary" onclick="lastThreeMonthBtn()">3개월</button>
 								<button type="button" class="btn btn-outline-primary" onclick="lastSixMonthBtn()">6개월</button>
 							</div>
-							<hr>
 							<form action="{{request.path}}" method="GET" name="dateSearchForm">
-								<div class="d-flex align-items-center ms-5">
+								<div class="d-flex align-items-center ms-md-5 ms-0">
 									<input class="form-control form-radius" name="start_date" type="date" id="start-date-input">
 										&nbsp;&nbsp;~&nbsp;&nbsp;
 									<input class="form-control form-radius" name="end_date" type="date" id="end-date-input">
@@ -139,10 +145,28 @@
 </div>
 
 <script>
+	
+//==============================
+// URL 파라미터 날짜 시작일에 적용
+//==============================
 
-document.getElementById("start-date-input").value = new Date().toISOString().slice(0,10);
+const curUrl = window.location.href;
+const url = new URL(curUrl);
+const urlParams = url.searchParams;
+
+/*종료 날짜 오늘 날짜로 지정*/
 document.getElementById("end-date-input").value = new Date().toISOString().slice(0,10);
-lastOneMonthBtn();
+
+/*새로 페이지 들어올 시 한달 전 날짜로 셋팅*/
+if (urlParams.has('start_date') == false) {
+	lastOneMonthBtn();
+}else{
+	document.getElementById("start-date-input").value = urlParams.get('start_date');
+}
+	
+//==============================
+// 기간별 날짜 적용
+//==============================
 
 function todayBtn(){
 	document.getElementById("start-date-input").value = new Date().toISOString().slice(0,10);
@@ -153,67 +177,69 @@ function lastWeekBtn(){
 	let nowDate = new Date();
 	let weekDate = nowDate.getTime() - (7*24*60*60*1000);
 	nowDate.setTime(weekDate);
-
+	
 	let weekYear = nowDate.getFullYear();
 	let weekMonth = nowDate.getMonth() + 1;
 	let weekDay = nowDate.getDate();
-
+	
 	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
 	if(weekDay < 10) {weekDay = "0" + weekDay};
-
+	
 	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
-
-  document.getElementById("start-date-input").value = resultDate;
+	
+	document.getElementById("start-date-input").value = resultDate;
 }  
+
 
 function lastOneMonthBtn(){
 	let nowDate = new Date();
 	let monthDate = nowDate.getTime() - (30*24*60*60*1000);
 	nowDate.setTime(monthDate);
-
+	
 	let weekYear = nowDate.getFullYear();
 	let weekMonth = nowDate.getMonth() + 1;
 	let weekDay = nowDate.getDate();
-
+	
 	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
 	if(weekDay < 10) {weekDay = "0" + weekDay};
-
+	
 	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
-
-  document.getElementById("start-date-input").value = resultDate;	
+	
+	document.getElementById("start-date-input").value = resultDate;	
 }
 function lastThreeMonthBtn(){
 	let nowDate = new Date();
 	let threeMonthDate = nowDate.getTime() - (3*30*24*60*60*1000);
 	nowDate.setTime(threeMonthDate);
-
+	
 	let weekYear = nowDate.getFullYear();
 	let weekMonth = nowDate.getMonth() + 1;
 	let weekDay = nowDate.getDate() - 1;
-
+	
 	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
 	if(weekDay < 10) {weekDay = "0" + weekDay};
-
+	
 	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
-
-  document.getElementById("start-date-input").value = resultDate;	
+	
+	document.getElementById("start-date-input").value = resultDate;	
 }
 function lastSixMonthBtn(){
 	let nowDate = new Date();
 	let sixMonthDte = nowDate.getTime() - (6*30*24*60*60*1000);
 	nowDate.setTime(sixMonthDte);
-
+	
 	let weekYear = nowDate.getFullYear();
 	let weekMonth = nowDate.getMonth() + 1;
 	let weekDay = nowDate.getDate() -3;
-
+	
 	if(weekMonth < 10) {weekMonth = "0" + weekMonth};
 	if(weekDay < 10) {weekDay = "0" + weekDay};
-
+	
 	let resultDate = weekYear + "-" + weekMonth + "-" + weekDay;
-
-  document.getElementById("start-date-input").value = resultDate;	
+	
+	document.getElementById("start-date-input").value = resultDate;	
 }
+
 
 </script>
 {% endblock %}
