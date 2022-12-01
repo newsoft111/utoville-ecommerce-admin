@@ -3,11 +3,20 @@
 {% load static %}
 {% load humanize %}
 
-<!-- Begin page -->
+<style>
+.fc-daygrid-day-bottom {
+	margin-top: 3px !important;
+	margin-left: 3px;
+}
+a.fc-daygrid-more-link, .fc-timegrid-more-link-inner {
+    font-size: 14px;
+    font-weight: bold;
+	color: #000 !important;
+}
+</style>
 
 <div class="page-content">
 	<div class="container-fluid">
-		<!-- start page title -->
 		<div class="row">
 			<div class="col-12">
 				<div class="page-title-box d-flex align-items-center justify-content-between">
@@ -15,7 +24,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- end page title -->
 		<div class="row">
 			<div class="col-lg-8">
 				<div class="card">
@@ -146,6 +154,8 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <script>
+
+/*Orders Charts*/
 var options={
 	series:[{
 		name:"주문수",
@@ -165,6 +175,7 @@ var options={
 var chart = new ApexCharts(document.querySelector("#total_order_chart"), options);
 chart.render();
 
+/*Profit Charts*/
 var options={
 	series:[{
 		name:"주문수",
@@ -184,7 +195,7 @@ var options={
 var chart = new ApexCharts(document.querySelector("#total_profit_chart"), options);
 chart.render();
 
-
+/*Mainpage Calendar*/
 document.addEventListener("DOMContentLoaded", function() {
     var n = new bootstrap.Modal(document.getElementById("event-modal"), {
         keyboard: !1
@@ -295,6 +306,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return 768 <= window.innerWidth && window.innerWidth < 1200 ? "timeGridWeek" : window.innerWidth <= 768 ? "listMonth" : "dayGridMonth"
     }
     var m = new FullCalendar.Calendar(r, {
+		dayMaxEvents: 5,
+		eventMaxStack: 2,
         timeZone: "local",
 		contentHeight: 'auto',
         initialView: c(),
