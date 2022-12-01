@@ -47,8 +47,8 @@
 								<button type="submit" style="width:100px;" class="btn btn-primary mx-1">검색</button>
 							</div>
 						</form>			
-						<div class="table-responsive">
-							<table class="table responsiveTable mt-3 mb-0 text-center">
+						<div class="responsiveTable">
+							<table class="table mt-3 mb-0 text-center">
 								<thead class="table-light">
 									<tr>
 										<th scope="col" style="width: 50px;">
@@ -66,8 +66,8 @@
 										<th scope="col">연락처</th>
 										<th scope="col">남은수량</th>
 										<th scope="col">결제일</th>
-									</tr><!-- end tr -->
-								</thead><!-- end thead -->
+									</tr>
+								</thead>
 								<tbody>
 									{% if not order_item_objs %}
 									<tr>
@@ -119,14 +119,13 @@
 										<td data-label="결제일">
 											{{order_item_obj.order.payment.paid_at}}
 										</td>
-									</tr><!-- end tr -->
+									</tr>
 									{% endfor %}
-								</tbody><!-- end tbody -->
-							</table><!-- end table -->
-						</div><!-- end table responsive -->
+								</tbody>
+							</table>
+						</div>
 
-						<div class="row g-0 text-center text-sm-start">
-							<!-- end col -->
+						<div class="row g-0 text-center text-sm-start mt-3">
 							<div class="col-12">
 								<ul class="pagination pagination-rounded justify-content-center mb-sm-0">
 									{% if order_item_objs.has_previous %}
@@ -165,7 +164,6 @@
 								</ul>
 							</div><!-- end col -->
 						</div><!-- end row -->
-						
 					</div><!-- end card body -->
 				</div><!-- end card -->
 			</div><!-- end col -->

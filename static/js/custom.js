@@ -96,3 +96,12 @@ function serialize (rawData) {
 (checkAll = document.getElementById("checkAll")) && (checkAll.onclick = function() {
 	for (var checkBox = document.querySelectorAll('.table-check input[type="checkbox"]'), e = 0; e < checkBox.length; e++) checkBox[e].checked = this.checked
 })
+
+function isDuplicate(arr) {
+	const isDup = arr.some(function(x) {
+	  return arr.indexOf(x) !== arr.lastIndexOf(x);
+	});
+						   
+	return isDup;
+}
+  

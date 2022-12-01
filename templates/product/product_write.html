@@ -19,7 +19,6 @@
 				<div class="page-title-box d-flex align-items-center justify-content-between">
 					<h4 class="mb-0">상품 등록</h4>
 				</div>
-
 				<p>대분류 > 중분류 > 소분류 순으로 선택하세요.</p>
 				<div class="col-md-4">
 					<div class="card text-bg-light">
@@ -47,19 +46,16 @@
 						</select>
 					</div>
 				</div>
-
 				<div class="col-12">
 					<div class="card" style="padding: 20px 10px;">
 						<div class="card-header justify-content-between d-flex align-items-center">
 							<h4 class="card-title">서비스 기본정보</h4>
 						</div><!-- end card header -->
 						<div class="card-body">
-
 							<div class="mb-3">
 								<label for="example-text-input" class="form-label">서비스 명</label>
 								<input class="form-control" type="text" placeholder="서비스 명을 입력하세요." name="product_name">								
 							</div><!-- end row -->
-
 							<div class="mb-3">
 								<div class="row">
 									<div class="col-md-6">
@@ -143,12 +139,12 @@
 							</div>
 				
 							<!--Listing Images-->
-							<div class="mb-4" data-dropzone-area="">
+							<div class="mb-4">
 								<label class="form-label">썸네일</label>
 								<div class="thumbnail-preview row" id="thumbnail-preview" >
 								</div>
 								<div class="chat-form rounded-pill" data-emoji-form="">
-									<input type="file" class="d-none" name="thumbnail" id="thumbnail-upload">
+									<input type="file" class="d-none" name="thumbnail" id="thumbnail-upload" onclick="handleClick(this);" accept="image/gif, image/jpeg, image/png">
 									<label for="thumbnail-upload">
 										<span class="btn btn-primary">업로드</span>
 									</label>
@@ -173,13 +169,14 @@
 	</div>
 </div>
 
-<script src="{% static 'libs/dropzone/dist/min/dropzone.min.js' %}"></script>
 <script src="{% static 'libs/quill/dist/quill.min.js' %}"></script>
 <script src="{% static 'libs/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
 
 <script>
 let options_data = []
 let is_run = false
+let fileArr = [];
+
 const dataTransfer = new DataTransfer();
 const handler = {
 	init() {
@@ -187,29 +184,55 @@ const handler = {
 		const preview = document.querySelector('.thumbnail-preview');
 		
 		fileInput.addEventListener('change', () => {
-			
 			const files = Array.from(fileInput.files);
+			const filesExtension = files[0].name.split('.').pop().toLowerCase();
+
+			if(!(filesExtension == 'jpg' || filesExtension == 'jpeg' || filesExtension == 'png' || filesExtension == 'gif')){
+				openModal('알림', '이미지 파일이 아닙니다.');
+				return false;
+			}	
+
 			files.forEach((file) => {
-				var reader = new FileReader();
-				reader.onload = function(e) {			
-					html = '<div class="position-relative col-3">';
-					html += `<button type='button' onclick='thumbnail_remove(this);' data-index='${file.lastModified}' class='btn btn-primary position-absolute top-0 end-0' id='thumbnail-remove-btn'><i class='bx bx-x fs-5 lh-1'></i></button>`;
-					html += `<img src="${e.target.result}" class="img-thumbnail">`;
-					html += '</div>'
-					preview.innerHTML +=  html;
+				fileArr.push(file.lastModified);
+				console.log(fileArr)
+				if(!isDuplicate(fileArr)){
+					var reader = new FileReader();
+					reader.onload = function(e) {	
+						html = '<div class="position-relative col-3">';
+						html += `<button type='button' onclick='thumbnail_remove(this);' data-index='${file.lastModified}' class='btn btn-primary position-absolute top-0 end-0' id='thumbnail-remove-btn'><i class='bx bx-x fs-5 lh-1'></i></button>`;
+						html += `<img src="${e.target.result}" class="img-thumbnail">`;
+						html += '</div>'
+						preview.innerHTML +=  html;
+					}
+					reader.readAsDataURL(file);
+					dataTransfer.items.add(file);
+
+				}else{
+					openModal('알림', '이미 업로드 된 파일입니다.');
+					removeArrItem(fileArr, file.lastModified);
 				}
-				reader.readAsDataURL(file);
-				dataTransfer.items.add(file);
 			});
 
 			fileInput.files = dataTransfer.files;
-			console.log(document.querySelector('#thumbnail-upload').files)
 		});
 	},
 }
 
 handler.init();
 
+/* 처음 동일한 파일 두 번 이상 업로드 했을 시 이벤트 핸들러 정상 작동하지 않는 에러 해결 */
+function handleClick(e) {
+	e.value = '';
+}
+
+function removeArrItem(array, item){
+    for(var i in array){
+        if(array[i]==item){
+            array.splice(i,1);
+            break;
+        }
+    }
+}
 
 function thumbnail_remove(e) {
 	dataTransfer.clearData();
@@ -221,14 +244,13 @@ function thumbnail_remove(e) {
 	for (let i = 0; i < files.length; i++) {
 		const file = files[i]
 		if (lastModified != file.lastModified) {
-
 			dataTransfer.items.add(file) // here you exclude the file. thus removing it.
 		}
 	}
 	
 	input.files = dataTransfer.files // Assign the updates list
 	e.parentElement.remove();
-
+	removeArrItem(fileArr, lastModified);
 }
 
 var quill = new Quill('#snow-editor', {

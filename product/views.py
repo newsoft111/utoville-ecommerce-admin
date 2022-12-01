@@ -42,6 +42,7 @@ def product_write(request):
 
 		try:
 			thumbnails = request.FILES.getlist('thumbnail')
+			print(thumbnails)
 		except:
 			result = {'result': '201', 'result_text': '대표 이미지을 등록해주세요.'}
 			return JsonResponse(result)

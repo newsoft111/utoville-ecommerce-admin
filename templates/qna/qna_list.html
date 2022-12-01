@@ -15,8 +15,8 @@
 						<h4 class="card-title">문의 내역</h4>
 					</div>
 					<div class="card-body">				
-						<div class="table-responsive">					
-							<table class="table responsiveTable mt-3 mb-0 text-center">
+						<div class="responsiveTable">					
+							<table class="table mt-3 mb-0 text-center">
 								<thead class="table-light">
 									<tr>
 										<th scope="col" style="width: 50px;">No.</th>
@@ -49,14 +49,13 @@
 										<td data-label="날짜">
 											{{qna_obj.questioned_at}}
 										</td>
-									</tr><!-- end tr -->
+									</tr>
 									{% endfor %}
-								</tbody><!-- end tbody -->
-							</table><!-- end table -->
-						</div><!-- end table responsive -->
+								</tbody>
+							</table>
+						</div>
 
-						<div class="row g-0 text-center text-sm-start">
-							<!-- end col -->
+						<div class="row g-0 text-center text-sm-start mt-3">
 							<div class="col-12">
 								<ul class="pagination pagination-rounded justify-content-center mb-sm-0">
 									{% if qna_objs.has_previous %}
@@ -95,7 +94,6 @@
 								</ul>
 							</div><!-- end col -->
 						</div><!-- end row -->
-						
 					</div><!-- end card body -->
 				</div><!-- end card -->
 			</div><!-- end col -->
