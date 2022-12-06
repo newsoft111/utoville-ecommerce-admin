@@ -87,3 +87,6 @@ def profit_export(request):
 	wb.save(response)
 	
 	return response
+
+def profit_catalog(request):
+	return render(request, 'profit/profit_catalog.html')
